@@ -1,0 +1,230 @@
+<!--
+Originally Created by: Ben Summers
+Use: Page that allows new incidents to be created from an incident report form
+-->
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Resources -->
+<head th:replace = "fragments/menu_fragments :: resources"> 
+    Load fragment head
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Menu Navigation Bar-->
+        <div id="nav-menu" th:replace="~{/fragments/menu_fragments :: nav-menu-admin(${badge_num}, Incident_Report)}">
+            Menu Navigation Bar      
+        </div>
+        
+        <div class="row">
+
+            <form action="#" th:action="@{/incident-report}" th:object="${incidentReport}" method="POST">
+
+                <div class="col">
+
+                <!-- INCIDENT REPORT FORM -->
+             
+                    <!-- Incident Details Section -->
+                    <div class="t2">Enter the incident details below</div>
+
+                    <!-- date field -->
+                    <div class="form-group row">
+                        <label for="dateAndTime" class="col-sm-4 col-form-label">Incident Date</label>
+                        <div  class="col-sm-8">
+                            <input type="datetime-local" th:field="*{dateAndTime}" name="dateAndTime" class="form-control" id="dateAndTime" placeholder="-">
+                            <span th:if="${#fields.hasErrors('dateAndTime')}" th:errors="*{dateAndTime}" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- location field -->
+                    <div class="form-group row">
+                        <label for="location"  class="col-sm-4 col-form-label">Location</label>
+                        <div  class="col-sm-8">
+
+                            <input type="hidden" name="location" class="form-control" id="location" placeholder="-">
+
+                            <!-- Location Filter Section (Modal)-->
+                            <div class="navbar-brand">
+                                <div data-toggle="tooltip" data-placement="right" title="Search/Filter results">
+                                    <a class="fa fa-search fa-sm" data-toggle="modal" data-target="#locationModal"></a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Hidden latitude and longitude fields-->
+                    <input type="hidden" th:field="*{latitude}" name="latitude" id="latitude">
+                    <input type="hidden" th:field="*{longitude}" name="longitude" id="longitude">
+
+                    <!-- Map -->
+                    <div class="form-group row">>
+                        <div id="map" class="mapStyle"></div>
+                    </div>
+
+                    <!-- message -->
+                    <p class="mapMessage">Note: Click on the map to enter the location automatically</p>
+                    <span th:if="${#fields.hasErrors('latitude')}" th:errors="*{latitude}" class="text-danger"></span>
+                        
+                    <!-- crime type field -->
+                    <div class="form-group row">
+                        <label for="crimeType" class="col-sm-4 col-form-label">Crime Type</label>
+                        <div class="col-sm-8">   
+                            <select id="crimeType" name="crimeType" th:field="*{crimeType}">
+                                <option th:each="crimeType : ${T(com.team05.codebotiics.mopi_webapp.model.enums.CrimeType).values()}"
+                                        th:value="${crimeType}"
+                                        th:text="${crimeType.displayValue}">
+                                </option>
+                            </select>
+                            <span th:if="${#fields.hasErrors('crimeType')}" th:errors="*{crimeType}" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- description field -->
+                    <div class="form-group row">
+                        <label for="description" name="description" class="col-sm-4 col-form-label">Description</label>
+                        <div  class="col-sm-8" th:field="*{description}"> 
+                            <textarea name="description" class="form-control" id="description" rows="5" placeholder="-"></textarea>
+                            <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- system clearance field -->
+                    <div class="form-group row">
+                        <label for="securityAccessLevel" class="col-sm-4 col-form-label">System Clearance</label>
+                        <div class="col-sm-8">   
+                            <select id="securityAccessLevel" name="securityAccessLevel" th:field="*{securityAccessLevel}">
+                                <option th:each="securityAccessLevel : ${T(com.team05.codebotiics.mopi_webapp.model.enums.SecurityAccessLevel).values()}"
+                                        th:value="${securityAccessLevel}"
+                                        th:text="${securityAccessLevel.displayValue}">
+                                </option>
+                            </select>
+                            <span th:if="${#fields.hasErrors('securityAccessLevel')}" th:errors="*{securityAccessLevel}" class="text-danger"></span>
+                        </div>
+                    </div>
+ 
+                    <!-- Form Buttons -->
+                    <div id="formButtons" th:replace="~{/fragments/buttons_fragments :: formButtons}">
+                        Form Buttons
+                    </div>
+
+                </div>
+                    
+                <!-- Location Filter Modal -->
+                <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-mb" role="document">
+
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+
+                                <!-- Title -->
+                                <div class="t2">Enter Location By Address (OPTIONAL)</div>
+
+                                <!-- Close window button-->
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                            <div class="modal-body">
+
+                                <!-- Location Filter Section -->
+                                <div class="card card-body">
+
+                                        <!-- House Number field -->
+                                        <div class="form-group row">
+                                            <label for="houseNumber" class="col-sm-4 col-form-label">House Number</label>
+                                            <div class="col-sm-8">
+                                                <input type="number" name="houseNumber" class="form-control" id="houseNumber" placeholder="-">
+                                            </div>
+                                        </div>
+
+                                        <!-- Street field -->
+                                        <div class="form-group row">
+                                            <label for="street" class="col-sm-4 col-form-label">Street</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" name="street" class="form-control" id="street" placeholder="-">
+                                            </div>
+                                        </div>
+
+                                        <!-- City field -->
+                                        <div class="form-group row">
+                                            <label for="city" class="col-sm-4 col-form-label">City</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" name="city" class="form-control" id="city" placeholder="-">
+                                            </div>
+                                        </div>
+
+                                        <!-- Country field -->
+                                        <div class="form-group row">
+                                            <label for="country" class="col-sm-4 col-form-label">Country</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" name="country" class="form-control" id="country" placeholder="-">
+                                            </div>
+                                        </div>
+
+                                </div>
+                            </div>
+
+                            <!-- Location Modal Footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                onclick="findCoordinates()" data-toggle="modal" data-target="#mapModal">Find Location</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!--Code for the Leaflet maps-->
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                <script type="application/javascript" src="//unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+                <script>
+                    //Creates a new Leaflet Map with the coordinates centered on the UK
+                    var map = new L.Map('map', {
+                        center: [ 50,-1 ],
+                        zoom: 5,
+                        layers: [
+                            new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                'attribution': 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+                            })
+                        ]
+                    });
+                    //Adds a marker to the map
+                    var marker= L.marker([ 0,0 ]).addTo(map);
+                    //Moves the marker to the coordinates of the users mouse when they click on the map
+                    function onMapClick(e){
+                        marker.setLatLng(e.latlng);
+                        document.getElementById("location").value= e.latlng.lat.toString()+","+e.latlng.lng.toString();
+                        document.getElementById("latitude").value= e.latlng.lat;
+                        document.getElementById("longitude").value= e.latlng.lng;
+                    }
+                    map.on('click', onMapClick);
+
+                    //This function queries the Nominatim geocoding API with the address lines in the form
+                    function findCoordinates(){
+                        var houseNumber= document.getElementById("houseNumber").value.toString();
+                        var street = document.getElementById("street").value;
+                        var city= document.getElementById("city").value;
+                        var country= document.getElementById("country").value;
+                        var url= 'https://nominatim.openstreetmap.org/search?q='+houseNumber+'+'+street+'+'+city+'+'+country+'&format=json&limit=1';
+                        //Extract address values from the JSON returned by the API and updates the latitude and
+                        //longitude fields of the form
+                        $.getJSON(url, function(data) {
+                            var mainContainer= document.getElementById("location");
+                            document.getElementById("location").value= data[0].lat+","+data[0].lon;
+                            document.getElementById("latitude").value= data[0].lat;
+                            document.getElementById("longitude").value= data[0].lon;
+                            marker.setLatLng([data[0].lat,data[0].lon]);
+                        });
+                    }
+                </script>
+            </form>
+        </div>   
+    </div>  
+</body>
+</html>

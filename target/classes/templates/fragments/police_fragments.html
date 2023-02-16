@@ -1,0 +1,252 @@
+<!--
+Originally Created by: Michael Stavrou
+Use: Fragments for the police and person registration
+-->
+
+<!doctype html>
+
+<html xmlns:th="https://www.thymeleaf.org">
+
+<body>
+    
+        <!-- PERSON DETAILS -->
+        <div id="personDetails" class="tab-pane active" th:fragment = "person-content">
+            
+            <div class="t2">Enter the person details below</div>
+
+                <!-- first name field -->
+                <div class="form-group row">
+                    <label for="firstname"  class="col-sm-4 col-form-label">First name</label>
+                    <div  class="col-sm-8">
+                        <input type="text" th:field="*{person.firstname}" class="form-control" id="firstname" placeholder="-">
+                        <span th:if="${#fields.hasErrors('person.firstname')}" th:errors="*{person.firstname}" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- middle name field -->
+                <div class="form-group row">
+                    <label for="middleName" class="col-sm-4 col-form-label">Middle name</label>
+                    <div class="col-sm-8">
+                        <input type="text" th:field="*{person.middleName}" class="form-control" id="middleName" placeholder="-">
+                        <span th:if="${#fields.hasErrors('person.middleName')}" th:errors="*{person.middleName}" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- lastname field -->
+                <div class="form-group row">
+                    <label for="lastname" class="col-sm-4 col-form-label">Last name</label>
+                    <div class="col-sm-8">
+                        <input type="text" th:field="*{person.lastname}" class="form-control" id="lastname" placeholder="-" >
+                        <span th:if="${#fields.hasErrors('person.lastname')}" th:errors="*{person.lastname}" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- alias field-->
+                <div class="form-group row">
+                    <label for="alias" class="col-sm-4 col-form-label">Alias</label>
+                    <div class="col-sm-8">
+                        <input type="text" th:field="*{person.alias}" class="form-control" id="alias" placeholder="-">
+                        <span th:if="${#fields.hasErrors('person.alias')}" th:errors="*{person.alias}" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- ethnic origin field -->
+                <div class="form-group row">
+                    <label for="ethnicOrigin" class="col-sm-4 col-form-label">Ethnic Origin</label>
+                    <div class="col-sm-8">
+                        <input type="text" th:field="*{person.ethnicOrigin}" class="form-control" id="ethnicOrigin" placeholder="-" >
+                        <span th:if="${#fields.hasErrors('person.ethnicOrigin')}" th:errors="*{person.ethnicOrigin}" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- date of birth field -->
+                <div class="form-group row">
+                    <label for="dateOfBirth" class="col-sm-4 col-form-label">Date of Birth</label>
+                    <div class="col-sm-8">
+                        <input type="date" th:field="*{person.dateOfBirth}" class="form-control" id="dateOfBirth" placeholder="yyyy-mm-dd" >
+                        <span th:if="${#fields.hasErrors('person.dateOfBirth')}" th:errors="*{person.dateOfBirth}" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- sex -->
+                <div class="form-group row">
+                    <label for="sex" class="col-sm-4 col-form-label">Sex</label>
+                    <div class="col-sm-8">
+                        <select id="sex" th:field="*{person.sex}" >
+                            <option th:value="-1">-- select an option --</option>
+                            <option th:each="sex : ${T(com.team05.codebotiics.mopi_webapp.model.enums.Sex).values()}"
+                                    th:value="${sex}"
+                                    th:text="${sex.displayValue}">
+                            </option>
+                        </select>
+                        <span th:if="${#fields.hasErrors('person.sex')}" th:errors="*{person.sex}" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- weight -->
+                <div class="form-group row">
+                    <label for="weight" class="col-sm-4 col-form-label">Weight</label>
+                    <div class="col-sm-8">
+                        <input type="number" th:field="*{person.weight}" class="form-control" id="weight" placeholder="Kilograms" >
+                        <span th:if="${#fields.hasErrors('person.weight')}" th:errors="*{person.weight}" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- height -->
+                <div class="form-group row">
+                    <label for="height" class="col-sm-4 col-form-label">Height</label>
+                    <div class="col-sm-8">
+                        <input type="number" th:field="*{person.height}" class="form-control" id="height" placeholder="Centimetres">
+                        <span th:if="${#fields.hasErrors('person.height')}" th:errors="*{person.height}" class="text-danger"></span>
+                    </div>
+                </div>
+        </div>
+
+        <!-- Contact Details Section -->
+        <div id="personContactDetails" class="tab-pane" th:fragment = "personContact-content">
+            
+            <div class="t2">Enter the contact details below</div>
+        
+                <!-- address line 1 field -->
+                <div class="form-group row">
+                    <label for="addressLine1" class="col-sm-4 col-form-label">Address Line 1</label>
+                    <div class="col-sm-8">
+                        <input type="text" th:field="*{person.addressLine1}" class="form-control" id="addressLine1" placeholder="-">
+                        <span th:if="${#fields.hasErrors('person.addressLine1')}" th:errors="*{person.addressLine1}" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- address line 2 field -->
+                <div class="form-group row">
+                    <label for="addressLine2" class="col-sm-4 col-form-label">Address Line 2</label>
+                    <div class="col-sm-8">
+                        <input type="text" th:field="*{person.addressLine2}" class="form-control" id="addressLine2" placeholder="-">
+                        <span th:if="${#fields.hasErrors('person.addressLine2')}" th:errors="*{person.addressLine2}" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- county field -->
+                <div class="form-group row">
+                    <label for="country" class="col-sm-4 col-form-label">Country</label>
+                    <div class="col-sm-8">
+                        <input type="text" th:field="*{person.country}" class="form-control" id="country" placeholder="-">
+                        <span th:if="${#fields.hasErrors('person.country')}" th:errors="*{person.country}" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- city field -->
+                <div class="form-group row">
+                    <label for="city" class="col-sm-4 col-form-label">City</label>
+                    <div class="col-sm-8">
+                        <input type="text" th:field="*{person.city}" class="form-control" id="city" placeholder="-">
+                        <span th:if="${#fields.hasErrors('person.city')}" th:errors="*{person.city}" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- town field -->
+                <div class="form-group row">
+                    <label for="town" class="col-sm-4 col-form-label">Town</label>
+                    <div class="col-sm-8">
+                        <input type="text" th:field="*{person.town}" class="form-control" id="town" placeholder="-">
+                        <span th:if="${#fields.hasErrors('person.town')}" th:errors="*{person.town}" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- country field-->
+                <div class="form-group row">
+                    <label for="county" class="col-sm-4 col-form-label">County</label>
+                    <div class="col-sm-8">
+                        <input type="text" th:field="*{person.county}" class="form-control" id="county" placeholder="-">
+                        <span th:if="${#fields.hasErrors('person.county')}" th:errors="*{person.county}" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- post code field -->
+                <div class="form-group row">
+                    <label for="postcode" class="col-sm-4 col-form-label">Post Code</label>
+                    <div class="col-sm-8">
+                        <input type="text" th:field="*{person.postCode}" class="form-control" id="postcode" placeholder="-">
+                        <span th:if="${#fields.hasErrors('person.postCode')}" th:errors="*{person.postCode}" class="text-danger"></span>
+                    </div>
+                </div> 
+        </div>
+    
+
+        <!-- POLICE DETAILS -->
+        <div id="policeDetails" class="tab-pane" th:fragment = "police-content">
+
+            <div class="t2">Enter the police details below</div>
+
+                <!-- password field -->
+                <div class="form-group row">
+                    <label for="passwordHash" class="col-sm-4 col-form-label">Password</label>
+                    <div class="col-sm-8">
+                        <div data-toggle="tooltip" data-placement="right" 
+                        title="Field must be between 8 and 15 characters and contain at least: 1 uppercase letter, 1 lowercase letter, 1 digit and 
+                        1 special character ( !, @, #, $, %, ^, &, *, _, =, +, -, ])">
+                            <input type="password" class="form-control" id="passwordHash" placeholder="-" th:field="*{passwordHash}" autocomplete="new-password"
+                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,15}$">
+                        </div>
+                        <span th:if="${#fields.hasErrors('passwordHash')}" th:errors="*{passwordHash}" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- confirm password field -->
+                <div class="form-group row">
+                    <label for="confirmPassword" class="col-sm-4 col-form-label">Confirm Password</label>
+                    <div class="col-sm-8">
+                        <input type="password" class="form-control" id="confirmPassword" placeholder="-" th:field="*{confirmPassword}" autocomplete="off">
+                        <span th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- rank field -->
+                <div class="form-group row">
+                    <label for="rank" class="col-sm-4 col-form-label">Rank</label>
+                    <div class="col-sm-8">   
+                        <select id="rank_l" th:field="*{rank_l}" >
+                            <option th:value="-1">-- select an option --</option>
+                            <option th:each="rank : ${T(com.team05.codebotiics.mopi_webapp.model.enums.Rank).values()}"
+                                    th:value="${rank}"
+                                    th:text="${rank.displayValue}">
+                            </option>
+                        </select>
+                        <span th:if="${#fields.hasErrors('rank_l')}" th:errors="*{rank_l}" class="text-danger"></span>                         
+                    </div>
+                </div>
+
+                <!-- system role field -->
+                <div class="form-group row">
+                    <label for="role" class="col-sm-4 col-form-label">System Role</label>
+                    <div class="col-sm-8">
+                        <select id="role" th:field="*{role}">
+                            <option th:each="role : ${T(com.team05.codebotiics.mopi_webapp.model.enums.Role).values()}"
+                                    th:value="${role}"
+                                    th:text="${role.displayValue}">
+                            </option>
+                        </select>
+                        <span th:if="${#fields.hasErrors('role')}" th:errors="*{role}" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- system clearance field -->
+                <div class="form-group row">
+                    <label for="securityAccessLevel" class="col-sm-4 col-form-label">System Clearance</label>
+                    <div class="col-sm-8">   
+                        <select id="securityAccessLevel" th:field="*{securityAccessLevel}">
+                            <option th:each="securityAccessLevel : ${T(com.team05.codebotiics.mopi_webapp.model.enums.SecurityAccessLevel).values()}"
+                                    th:value="${securityAccessLevel}"
+                                    th:text="${securityAccessLevel.displayValue}">
+                            </option>
+                        </select>
+                    <span th:if="${#fields.hasErrors('securityAccessLevel')}" th:errors="*{securityAccessLevel}" class="text-danger"></span>
+                    </div>
+                </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+
+ 
+</body>
+</html>

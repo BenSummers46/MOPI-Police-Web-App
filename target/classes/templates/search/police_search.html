@@ -1,0 +1,256 @@
+<!--
+Originally Created by: Ben Summers
+Use: Page that allows the user to search for other police officers in the system
+-->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/menu_fragments :: resources">
+    Load fragment head
+    <meta charset="UTF-8">
+</head>
+<body>
+    <div class="container tab-pane">
+        <div th:replace="fragments/menu_fragments :: nav-menu-admin(${#authentication.getPrincipal().getUsername()},  Police_Search)"/>
+
+        <div class="searchField">
+            <!--Search By first name-->
+            <form th:action="@{/policeSearchByName}" method="post">
+                <fieldset>
+                    <input type="search" name="firstName" size="50" th:value="${firstName}" placeholder="Search by firstname...">
+                    <button type="submit" class="btn"><i class="fa fa-search"></i></button>
+                </fieldset>
+            </form>
+
+            <!--        Search by Badge Number-->
+            <form th:action="@{/policeSearchByBadgeNumber}" method="post">
+                <fieldset>
+                    <input type="search" name="badgeNumber" size="50" th:value="${badgeNumber}" placeholder="Search by Badge Number...">
+                    <button type="submit" class="btn"><i class="fa fa-search"></i></button>
+                </fieldset>
+            </form>
+        </div>
+
+        <!--Displays a "No results" message if backend doesn't find any results-->
+        <div th:if="${msg}">
+            <span class="t2" th:text="${msg}"></span>
+        </div>
+        <br>
+        <hr>
+        <br>
+
+        <!--Search Results-->
+        <div th:each="police: ${policeList}">
+            <form th:action="@{/modifyPolice}" method="post">
+                <fieldset th:id="'result'+${police.getBadgeNumber()}" disabled="true">
+                    <div class="t2" th:inline="text">Badge Number: [[${police.getBadgeNumber()}]]</div>
+                    <div class="t2">Person details:</div>
+
+                    <!--Hidden fields used by the modifyPolice method in the backend to identify the Police-->
+                    <input type="hidden" id="badgeNumber" name="badgeNumber" th:value="${police.getBadgeNumber()}">
+                    <input type="hidden" id="personId" name="personId" th:value="${police.getPerson().getPersonId()}">
+
+                    <!-- first name field -->
+                    <div class="form-group row">
+                        <label for="firstname"  class="col-sm-4 col-form-label">First name</label>
+                        <div  class="col-sm-8">
+                            <input type="text" class="form-control" id="firstname" name="firstname" th:value=" ${police.person.getFirstname()}">
+                        </div>
+                    </div>
+
+                    <!-- middle name field -->
+                    <div class="form-group row">
+                        <label for="middlename"  class="col-sm-4 col-form-label">Middle name</label>
+                        <div  class="col-sm-8">
+                            <input type="text" class="form-control" id="middlename" name="middlename" th:value=" ${police.person.getMiddleName()}">
+                        </div>
+                    </div>
+
+                    <!-- last name field -->
+                    <div class="form-group row">
+                        <label for="lastname"  class="col-sm-4 col-form-label">Last name</label>
+                        <div  class="col-sm-8">
+                            <input type="text" class="form-control" id="lastname" name="lastname" th:value="${police.person.getLastname()}">
+                        </div>
+                    </div>
+
+                    <!-- alias name field -->
+                    <div class="form-group row">
+                        <label for="alias"  class="col-sm-4 col-form-label">Alias</label>
+                        <div  class="col-sm-8">
+                            <input type="text" class="form-control" id="alias" name="alias" th:value="${police.person.getAlias()}">
+                        </div>
+                    </div>
+
+                    <!-- ethnic origin field -->
+                    <div class="form-group row">
+                        <label for="ethnicOrigin"  class="col-sm-4 col-form-label">Ethnic Origin</label>
+                        <div  class="col-sm-8">
+                            <input type="text" class="form-control" id="ethnicOrigin" name="ethnicOrigin" th:value="${police.person.getEthnicOrigin()}">
+                        </div>
+                    </div>
+
+                    <!-- date of birth field -->
+                    <div class="form-group row">
+                        <label for="dateOfBirth" class="col-sm-4 col-form-label">Date of Birth</label>
+                        <div class="col-sm-8">
+                            <input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth" th:value=" ${police.person.getDateOfBirth().toString().substring(0,10)}">
+                        </div>
+                    </div>
+
+                    <!-- sex -->
+                    <div class="form-group row">
+                        <label for="sex" class="col-sm-4 col-form-label">Sex</label>
+                        <div class="col-sm-8">
+                            <select id="sex" name="sex">
+                                <option th:value="${police.person.getSex()}" th:inline="text">[[${police.person.getSex()}]]</option>
+                                <option th:each="sex : ${T(com.team05.codebotiics.mopi_webapp.model.enums.Sex).values()}"
+                                        th:value="${sex}"
+                                        th:text="${sex.displayValue}">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!--Weight-->
+                    <div class="form-group row">
+                        <label for="weight" class="col-sm-4 col-form-label">Weight</label>
+                        <div class="col-sm-8">
+                            <input type="number" class="form-control" id="weight" name="weight" th:value="${police.person.getWeight()}" >
+                        </div>
+                    </div>
+
+                    <!--Height-->
+                    <div class="form-group row">
+                        <label for="height" class="col-sm-4 col-form-label">Height</label>
+                        <div class="col-sm-8">
+                            <input type="number" class="form-control" id="height" name="height" th:value="${police.person.getHeight()}" >
+                        </div>
+                    </div>
+
+                    <div class="t2">Contact Details:</div>
+
+                    <!-- address line one field -->
+                    <div class="form-group row">
+                        <label for="addressLine1"  class="col-sm-4 col-form-label">Address Line One</label>
+                        <div  class="col-sm-8">
+                            <input type="text" class="form-control" id="addressLine1" name="addressLine1" th:value="${personAddresses.get(police.person.getPersonId)[0]}">
+                        </div>
+                    </div>
+
+                    <!-- address line two field -->
+                    <div class="form-group row">
+                        <label for="addressLine2"  class="col-sm-4 col-form-label">Address Line Two</label>
+                        <div  class="col-sm-8">
+                            <input type="text" class="form-control" id="addressLine2" name="addressLine2" th:value="${personAddresses.get(police.person.getPersonId)[1]}">
+                        </div>
+                    </div>
+
+                    <!-- city field -->
+                    <div class="form-group row">
+                        <label for="city"  class="col-sm-4 col-form-label">City</label>
+                        <div  class="col-sm-8">
+                            <input type="text" class="form-control" id="city" name="city" th:value="${personAddresses.get(police.person.getPersonId)[3]}">
+                        </div>
+                    </div>
+
+                    <!-- county field -->
+                    <div class="form-group row">
+                        <label for="country"  class="col-sm-4 col-form-label">County</label>
+                        <div  class="col-sm-8">
+                            <input type="text" class="form-control" id="county" name="county" th:value="${personAddresses.get(police.person.getPersonId)[5]}">
+                        </div>
+                    </div>
+
+                    <!-- country field -->
+                    <div class="form-group row">
+                        <label for="country"  class="col-sm-4 col-form-label">Country</label>
+                        <div  class="col-sm-8">
+                            <input type="text" class="form-control" id="country" name="country" th:value="${personAddresses.get(police.person.getPersonId)[2]}">
+                        </div>
+                    </div>
+
+                    <!-- postcode field -->
+                    <div class="form-group row">
+                        <label for="postcode"  class="col-sm-4 col-form-label">Postcode</label>
+                        <div  class="col-sm-8">
+                            <input type="text" class="form-control" id="postcode" name="postcode" th:value="${personAddresses.get(police.person.getPersonId)[6]}">
+                        </div>
+                    </div>
+
+                    <div class="t2">Police details</div>
+                    <!-- rank field -->
+                    <div class="form-group row">
+                        <label for="rank_l" class="col-sm-4 col-form-label">Rank</label>
+                        <div class="col-sm-8">
+                            <select id="rank_l" name="rank_l">
+                                <option th:value="${police.getRank_l()}" th:inline="text">[[${police.getRank_l()}]]</option>
+                                <option th:each="rank : ${T(com.team05.codebotiics.mopi_webapp.model.enums.Rank).values()}"
+                                        th:value="${rank}"
+                                        th:text="${rank.displayValue}">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- system role field -->
+                    <div class="form-group row">
+                        <label for="role" class="col-sm-4 col-form-label">System Role</label>
+                        <div class="col-sm-8">
+                            <select id="role" name="role" required>
+                                <option th:value="${police.getRole()}" th:inline="text">[[${police.getRole()}]]</option>
+                                <option th:each="role : ${T(com.team05.codebotiics.mopi_webapp.model.enums.Role).values()}"
+                                        th:value="${role}"
+                                        th:text="${role.displayValue}">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- system clearance field -->
+                    <div class="form-group row">
+                        <label for="securityAccessLevel" class="col-sm-4 col-form-label">System Clearance</label>
+                        <div class="col-sm-8">
+                            <select id="securityAccessLevel" name="securityAccessLevel" required>
+                                <option th:value="${police.getSecurityAccessLevel()}" th:inline="text">[[${police.getSecurityAccessLevel()}]]</option>
+                                <option th:each="securityAccessLevel : ${T(com.team05.codebotiics.mopi_webapp.model.enums.SecurityAccessLevel).values()}"
+                                        th:value="${securityAccessLevel}"
+                                        th:text="${securityAccessLevel.displayValue}">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+                <!--Specifies whether the user is DELETING or UPDATING a record-->
+                <div class="form-group row">
+                    <div class="col-sm-8">
+                        <input type="hidden" class="form-control" th:id="'action'+${police.getBadgeNumber()}" name="action"  value=0 required>
+                    </div>
+                </div>
+                <div class="col">
+                    <button type="button" class="btn" th:onclick="|edit${police.getBadgeNumber()}()|">Edit Data</button>
+                    <button type="button" class="btn btn-danger" th:onclick="|delete${police.getBadgeNumber()}()|">Delete Data</button>
+                    <button type="submit" class="btn btn-success" th:id="'submit'+${police.getBadgeNumber()}" disabled="true">Submit Form</button>
+                </div>
+            </form>
+            <br>
+            <hr>
+            <br>
+            <script>
+                //Enables the disabled fields in the form, sets the hidden action field to 0 for UPDATING
+                function edit[[${police.getBadgeNumber()}]](){
+                    document.getElementById("result"+[[${police.getBadgeNumber()}]]).removeAttribute("disabled");
+                    document.getElementById("submit"+[[${police.getBadgeNumber()}]]).removeAttribute("disabled");
+                    document.getElementById("action"+[[${police.getBadgeNumber()}]]).value = 0;
+                }
+                //Enables the disabled fields in the form, sets the hidden action field to 1 for DELETION
+                function delete[[${police.getBadgeNumber()}]](){
+                    document.getElementById("result"+[[${police.getBadgeNumber()}]]).removeAttribute("disabled");
+                    document.getElementById("submit"+[[${police.getBadgeNumber()}]]).removeAttribute("disabled");
+                    document.getElementById("action"+[[${police.getBadgeNumber()}]]).value = 1;
+                }
+            </script>
+        </div>
+    </div>
+</body>
+</html>

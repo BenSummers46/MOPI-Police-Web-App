@@ -1,0 +1,147 @@
+<!--
+Originally Created by: Michael Stavrou
+Use: Fragments for the overall form of the page
+-->
+
+<!doctype html>
+
+<html xmlns:th="https://www.thymeleaf.org">
+
+<head th:fragment = "resources">
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" type="text/css" th:href="@{css/stylesheet1.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+          crossorigin=""/>
+    <!-- Optional JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+            crossorigin=""></script>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    
+</head>
+
+<body>
+
+<!-- Administrator Navigation Menu -->
+<div th:fragment = "nav-menu-admin(username, page_title)">
+
+    <div class="row">
+
+        <img th:src="@{/images/police_logo.jpg}"/>
+
+    </div>
+
+    <div class="row">
+
+        <!-- page title -->
+        <div class="col">
+            <span class="t1" th:text="${#strings.replace( page_title , '_', ' ' )}"></span>
+        </div>
+
+    </div>
+
+    <div class="menu">
+
+    <nav class="navbar navbar-expand-lg navbar-light">
+
+        <!-- menu bar icons -->
+        <div class="col">
+            <div class="navbar-brand"><a class="fa fa-home fa-lg" th:href="@{/home}"></a></div>
+        </div>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent" >
+
+            <!-- dropdowns -->
+            <div class="row bg">
+
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button"
+                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                        Report
+                    </button>
+
+                    <!--Dropdown for the incident pages-->
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" th:href="@{/incident-report}">An Incident</a>
+                        <a class="dropdown-item" th:href="@{/evidence-upload}">Evidence</a>
+                    </div>
+                </div>
+
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button"
+                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                        Registration Forms
+                    </button>
+
+                    <!--Dropdown for the registration pages-->
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" th:href="@{/person-registration}">Person Registration Form</a>
+                        <a class="dropdown-item" th:href="@{/license-registration}">License Registration Form</a>
+                        <a class="dropdown-item" th:href="@{/police-registration}">Police Registration Form</a>
+                        <a class="dropdown-item" th:href="@{/suspect-registration}">Suspect Registration Form</a>
+                    </div>
+                </div> 
+
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                        Search Forms
+                    </button>
+
+                    <!--Dropdown for the search pages-->
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" th:href="@{/police-search}">Police Search Form</a>
+                        <a class="dropdown-item" th:href="@{/person-search}">Person Search Form</a>
+                        <a class="dropdown-item" th:href="@{/license-search}">License Search Form</a>
+                        <a class="dropdown-item" th:href="@{/suspect-search}">Suspect Search Form</a>
+                        <a class="dropdown-item" th:href="@{/incident-search}">Incident Search Form</a>
+                    </div>
+                </div>
+
+
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button"
+                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                        
+                            user <span th:text="${username}"></span>
+                        
+                    </button>
+
+                    <!--Dropdown for the account pages-->
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" th:href="@{/view-accounts}">View My Account</a>
+                        <a class="dropdown-item" th:href="@{/audit-trail}">Audit Trail</a>
+                        <div role="separator" class="dropdown-divider"></div>
+                        <a class="dropdown-item" th:href="@{/logout}">Log Out</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

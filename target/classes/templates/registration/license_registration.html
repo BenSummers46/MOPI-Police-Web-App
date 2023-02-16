@@ -1,0 +1,247 @@
+<!--
+Originally Created by: Ben Summers
+Use: Allows the user to add licenses to the database as well as licenses for people.
+-->
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Resources -->
+<head th:replace = "fragments/menu_fragments :: resources"> 
+    Load fragment head
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Menu Navigation Bar-->
+        <div id="nav-menu" th:replace="~{/fragments/menu_fragments :: nav-menu-admin(${badge_num}, License_Registration_Form)}">
+            Menu Navigation Bar      
+        </div>
+        
+        <div class="row">
+
+            <form action="#" th:action="@{/license-registration}" th:object="${licenses}" method="POST">
+
+                <div class="col">
+
+                <!-- LICENSE FORM -->
+
+                    <!-- License Details Section -->
+                    <div class="t2">Register a new license below</div>
+
+                    <!-- license type field -->
+                    <div class="form-group row">
+                        <label for="licenseType"  class="col-sm-4 col-form-label">License Type</label>
+                    
+                        <div  class="col-sm-8">
+                            <input type="text" class="form-control" th:field="*{licenseType}" id="licenseType" placeholder="-" name="licenseType"/>
+                        </div>
+                    </div>
+                    
+                    <!-- license confirmation field -->
+                    <div class="form-group row">
+                        <label for="licenseConfirm" class="col-sm-4 col-form-label"></label>
+
+                        <div class="col-sm-8">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="confirmLicense" required>
+                                <label class="form-check-label" for="licenseConfirm">Click to confirm the above license</label>
+                            </div>
+                        </div>
+                    </div>   
+
+                <!-- Form Buttons -->
+                <div id="formButtons" th:replace="~{/fragments/buttons_fragments :: formButtons}">
+                    Form Buttons
+                </div>
+
+            </div>
+                    
+            </form>
+
+            <hr>
+
+            <form action="#" th:action="@{/license-registration-person}" th:object="${licenseDTO}" method="POST">
+
+                <script th:src="@{js/license.js}"></script>
+
+                <div class="col">
+
+                <!-- LICENSE/PERSON FORM -->
+
+                    <!-- License/Person Details Section -->
+                    <div class="t2">Register a new license to a person</div>
+
+                    <!-- License ID field -->
+                    <div class="form-group row">
+                        <label for="licenseId" class="col-sm-4 col-form-label">License ID</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+
+                                <select id="licenseId" th:field="*{licenseId}" class="form-control">
+                                    <option th:value="-1">-- select an option --</option>
+                                </select>
+
+                                <!-- Person Filter Section (Modal)-->
+                                <div class="navbar-brand">
+                                    <div data-toggle="tooltip" data-placement="right" title="Search ID">
+                                        <a class="fa fa-search fa-sm" id="licenseResult"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Person ID field -->
+                    <div class="form-group row">
+                        <label for="personId" class="col-sm-4 col-form-label">Person ID</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+
+                                <select id="personId" th:field="*{personId}" class="form-control">
+                                    <option th:value="-1">-- select an option --</option>
+                                </select>
+
+                                <!-- Person Filter Section (Modal)-->
+                                <div class="navbar-brand">
+                                    <div data-toggle="tooltip" data-placement="right" title="Search/Filter results">
+                                        <a class="fa fa-search fa-sm" data-toggle="modal" data-target="#personModal" id="personSearchButton"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                <!-- Form Buttons -->
+                <div class="col">
+        
+                    <button type="submit" class="btn btn-success" id="submitLinkForm">Submit form</button>
+                    <button type="reset" class="btn btn-danger" id="resetLinkForm">Reset form</button>
+            
+                </div>
+
+                <!-- Person Modal -->
+                <div class="modal fade" id="personModal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-mb" role="document">
+                        
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+
+                                <!-- Title -->
+                                <div class="t2">Filter results for Person ID below</div>
+
+                                <!-- Close Window Button -->
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+
+                            </div>
+                                
+                            <div class="modal-body">
+                            
+                                <!-- Incident Filter Section -->
+                                <div class="card card-body">
+                                                                    
+                                        <!-- firstname field -->
+                                        <div class="form-group row">
+                                            <label for="firstname"  class="col-sm-4 col-form-label">First name</label>
+                                            <div  class="col-sm-8">
+                                                <input class="form-control" list="firstname" id="firstname" name="firstname" placeholder="-"/>
+                                                <datalist>
+                                                    <option th:each="person : ${persons}" th:value=" ${person.firstname}">
+                                                    </option>
+                                                </datalist>
+                                            </div>
+                                        </div>
+
+                                        <!-- lastname field -->
+                                        <div class="form-group row">
+                                            <label for="lastname"  class="col-sm-4 col-form-label">Last name</label>
+                                            <div  class="col-sm-8">
+                                                <input class="form-control" list="lastname"  id="lastname" name="lastname" placeholder="-"/>
+                                                <datalist>
+                                                    <option th:each="person : ${persons}" th:value=" ${person.lastname}">
+                                                    </option>
+                                                </datalist>
+                                            </div>
+                                        </div>
+
+                                        <!-- date of birth field -->
+                                        <div class="form-group row">
+                                            <label for="dateOfBirth" class="col-sm-4 col-form-label">Date of Birth</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="dateOfBirth" placeholder="yyyy-mm-dd" >
+                                            </div>
+                                        </div>
+
+                                        <!-- sex -->
+                                        <div class="form-group row">
+                                            <label for="sex" class="col-sm-4 col-form-label">Sex</label>
+                                            <div class="col-sm-8">
+                                                <select id="sex">
+                                                    <option th:value="-1">-- select an option --</option>
+                                                    <option th:each="sex : ${T(com.team05.codebotiics.mopi_webapp.model.enums.Sex).values()}"
+                                                            th:value="${sex}"
+                                                            th:text="${sex.displayValue}">
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <!-- ethnic origin field -->
+                                        <div class="form-group row">
+                                            <label for="ethnicOrigin"  class="col-sm-4 col-form-label">Ethnic Origin</label>
+                                            <div  class="col-sm-8">
+                                                <input class="form-control" list="ethnicOrigin" id="ethnicOrigin" name="ethnicOrigin" placeholder="-"/>
+                                                <datalist>
+                                                    <option th:each="person : ${persons}" th:value=" ${person.ethnicOrigin}">
+                                                    </option>
+                                                </datalist>
+                                            </div>
+                                        </div>
+                                                            
+                                </div>
+
+                            </div>
+                
+                            <!-- Person Modal Footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="submitPersonForm">Submit form</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                    
+            </form>
+
+            <hr>
+
+            <div class="t2">License Results</div>
+
+            <div class="row">
+                <div class="col">
+                    <div style="overflow:auto;">
+                        <!-- License Table Section -->
+                        <table id="license-table" class="table-striped"></table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="t2">Person Results</div>
+
+            <div class="row">
+                <div class="col">
+                    <div style="overflow:auto;">
+                        <!-- Person Table Section -->
+                        <table id="person-table" class="table-striped"></table>
+                    </div>
+                </div>
+            </div>
+
+        </div>   
+    </div>  
+</body>
+</html>

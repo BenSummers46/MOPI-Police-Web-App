@@ -1,0 +1,44 @@
+<!--
+Originally Created by: Ben Summers
+Use: Displays information of transactions within the database
+-->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head th:replace = "fragments/menu_fragments :: resources">
+    Load Fragment Head
+
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Menu Navigation Bar-->
+    <div id="nav-menu" th:replace="~{/fragments/menu_fragments :: nav-menu-admin(${#authentication.getPrincipal().getUsername()}, Audit_Logs)}">
+        Menu Navigation Bar
+    </div>
+
+    <div class="t2">Database Transactions</div>
+
+    <!--Table to show results of query-->
+    <table border="1" style="width:100%">
+        <tr>
+            <th>Event ID</th>
+            <th>Date and Time</th>
+            <th>Description</th>
+            <th>Police Badge Number</th>
+            <th>Event</th>
+        </tr>
+        <tr th:each="audit: ${audit_logs}">
+            <td th:text="${audit.eventId}"></td>
+            <td th:text="${audit.dateAndTime.toString()}"></td>
+            <td th:text="${audit.description}"></td>
+            <td th:text="${audit.police.getBadgeNumber()}"></td>
+            <td th:text="${audit.event.toString()}"></td>
+        </tr>
+    </table>
+
+</div>
+
+</body>
+</html>

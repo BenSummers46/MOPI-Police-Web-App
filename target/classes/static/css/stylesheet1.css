@@ -1,0 +1,259 @@
+
+/* ------ Page styles ------ */
+
+body {  background-color: steelblue;
+        color: #ecf0f1;
+}
+
+.container {    background-color: white;
+                height: 200%;
+}
+
+@media screen and (max-width: 1300px) {
+        div.card-deck {
+          display: none;
+        }
+}
+
+@media screen and (max-height: 800px) {
+        div.card-deck {
+          display: none;
+        }
+}
+
+.searchField {
+        text-align: center;
+    }
+
+
+/* ------ Menu Navigation Bar styles ------ */
+
+.menu { border-style: solid;
+        border-color: black;
+        background-color: steelblue;
+        margin: 15px 0px 15px 0px;
+}
+
+
+/* ------ Navigation Bar styles ------ */
+
+.nav { margin-bottom: 10px }
+
+.nav-item { width: 180px;
+            color: black;
+            text-align: centre;
+            font-family: calibri;
+            font-size: 15px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-style: solid;
+            border-radius: 8px;
+            border-color: black;
+            background-color: white;
+            margin-bottom: 5px;
+}
+
+.nav-item > .nav-link:focus { background-color: steelblue; }
+
+.nav-item > a:hover {   background-color: #FAEBD7;
+                        color: black;
+}
+
+
+/* ------ All Button styles ------ */
+
+.btn:hover {    background-color: #FAEBD7;
+                color: black;
+                border-color: black;
+}
+
+.dropdown-item { float: centre; }
+
+.dropdown-item:hover {  background-color: steelblue;
+                        color: white;
+                        border-color: black;
+                        border-style: solid;
+}
+
+.btn {  color: black;
+        text-align: centre;
+        font-family: calibri;
+        font-size: 15px;
+        font-weight: bold;
+        text-transform: uppercase;
+        border-style: solid;
+        border-width: 0.1cm;
+        border-color: black;
+        background-color: white;
+        width: 175;
+        cursor: pointer;
+        margin: 5px 5px 5px 10px;
+        border-radius: 0px;
+}
+
+.btn-success:hover {    background-color: rgb(18, 119, 18);
+                        border-color: black;
+                        color: white;
+}
+
+.btn-danger:hover {     background-color: rgb(165, 16, 16);
+                        border-color: black;
+                        color: white;
+}
+
+.btn-info:hover {       background-color: rgb(184, 123, 11);
+                        border-color: black;
+                        color: white;
+}
+
+.fa:hover {     text-decoration: none; 
+                color: #FAEBD7;
+                transform: scale(1.3);
+}
+
+.fa-search, .fa-database { padding-left: 10px; padding-top: 5px }
+.fa-search, .fa-database:hover { color: steelblue }
+
+
+/* ------ Content styles ------ */
+
+label, a, input, select, .card-text, textarea, p {   
+        color: black;
+        font-family: calibri;
+        font-size: 15px;
+        font-style: capitalize;
+}
+
+textarea { resize: none; }
+
+.input-group-text { background-color:#FAEBD7; height: 38px }
+
+select {        width: 100%;
+                margin-top: 5px;
+                padding: 5px 0px 5px 10px;
+                border-radius: 5px;
+                border-style: solid;           
+}
+
+.text-danger {  color: red;
+                font-family: calibri;
+                font-size: 15px;
+                font-weight: bold;
+}
+
+
+/* ------ Table styles ------ */
+
+th {    color: black;
+        font-family: calibri;
+        font-size: 15px;
+        font-style: Capitalize;
+        text-align: center; 
+}
+
+td {    color: black;
+        font-family: calibri;
+        font-size: 15px;
+        text-align: center;
+        border-width: auto;
+        width: auto;
+        overflow: hidden;
+}
+
+th {    text-transform: uppercase;
+        background-color: steelblue;
+        color: white;
+}
+
+table { margin: 10px;
+        display: block; 
+        border: solid black; 
+        height: 150px; 
+        overflow-y: scroll;                               
+        width: 400px; 
+        overflow-x: scroll;
+}
+
+/* ------ Title styles ------*/
+
+.t1 {	color: black;
+        text-align: right;
+        font-family: calibri;
+        font-size: 30px;
+        font-weight: bold;
+        text-transform: uppercase;
+        border-style: none;
+        float: right;
+}
+
+.t2 {	color: black;
+        font-family: calibri;
+        font-size: 20px;
+        font-weight: bold;
+        margin: 0px 0px 20px 0px;
+}
+
+.t3 {   color: black;
+        font-family: Calibri, serif;
+        font-weight: bold;
+        font-size: 20px;
+        margin: 0px 0px 20px 0px;
+}
+
+.navbar-brand {	        color: black;
+                        text-align: right;
+                        font-family: calibri;
+                        font-size: 20px;
+                        font-weight: bold;
+                        font-style: capitalize;
+                        border-style: none;
+                        float: left;
+                        text-transform: lowercase;
+}
+
+
+/* ------ Image styles ------*/
+
+img {   width: 200px; 
+        height: 70px;
+        margin: 15px
+}
+
+/* ------ Carousel styles ------ */
+
+.carousel-inner .carousel-item {transition: transform 2s ease;
+                                overflow-x: auto;
+}
+
+.carousel-item {        height: 170px 
+}
+
+.carousel-indicators > li { background-color: black;}
+
+
+/* ------ Card links styles ------ */
+
+.linkCard {  color: black;
+
+font-family: calibri;
+font-size: 15px;
+font-weight: bold;
+font-style: capitalize;
+
+}
+
+.linkCard:hover {       color: steelblue;
+                        text-decoration: none;
+                        font-weight: bold;
+                        font-size: 17px;
+ }
+
+ /* ------ Map styles ------ */
+
+.mapStyle {     width: 450px;
+                height: 180px;
+}
+
+.mapMessage {   font-weight: bold;
+                color:rgb(165, 16, 16)
+}

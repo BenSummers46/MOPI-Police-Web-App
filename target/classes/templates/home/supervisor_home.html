@@ -1,0 +1,278 @@
+<!--
+Originally Created by: Ben Summers
+Use: Home page for the supervisor role
+-->
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Resources -->
+<head th:replace = "fragments/menu_fragments :: resources"> 
+    Load fragment head
+</head>
+
+<body> 
+
+    <div class="container">
+
+        <!-- Menu Navigation Bar-->
+        <div id="nav-menu" th:replace="~{/fragments/menu_fragments :: nav-menu-admin(${badge_num}, Supervisor_Home_Page)}">
+            Menu Navigation Bar      
+        </div>
+
+        <!-- Carousel Bar -->
+        <div id="carouselIndicators" class="carousel slide" data-ride="carousel" data-interval="6000">
+
+            <!-- Carousel Indicators -->
+            <ol class="carousel-indicators">
+                <li data-target="#carouselIndicators" data-slide-to="0" class="active"></li>
+                <li data-target="#carouselIndicators" data-slide-to="1"></li>
+            </ol>
+            
+            <div class="carousel-inner">
+
+                <div class="carousel-item active">
+
+                    <!-- Welcome Page -->
+                    <div class="t3">Welcome to the Police National Database Homepage for Supervisors</div>
+                    <p>This is your central system to control, access and manage data.</p>
+
+                    <div class="col">
+                        <div class="row">
+                            <p>Be aware that the account security clearance is limited to - </p> 
+                            <p style="font-weight:bold" th:text="${securityAccessLevel}"></p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="carousel-item">
+
+                    <!-- NRAC Page -->
+                    <div class="t3">NRAC Review</div>
+                    <p>From here you can view any incidents that require to be reviewed.</p>
+                    <div class="navbar-brand">
+                        <a class="fa fa-database fa-sm" data-toggle="modal" data-target="#nracModal"></a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+        <!-- App Sections -->
+        <div class="card-deck">
+
+            <div class="card">
+                <div class="card-body">
+
+                    <!--Links to the report sections-->
+                    <div class="card-title t3">REPORT</div>
+
+                    <div class="card-text">Incident Report form!</div>
+                    <a class="linkCard" th:href="@{/incident-report}">>> Visit</a>
+
+                    <hr>
+
+                    <div class="card-text">Evidence form!</div>
+                    <a class="linkCard" th:href="@{/evidence-upload}">>> Visit</a>
+
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-body">
+
+                    <!--Links to the register sections-->
+                    <div class="card-title t3">REGISTER</div>
+
+                    <div class="card-text">Person Registration form!</div>
+                    <a class="linkCard" th:href="@{/person-registration}">>> Visit</a>
+
+                    <hr>
+
+                    <div class="card-text">License Registration form!</div>
+                    <a class="linkCard" th:href="@{/license-registration}">>> Visit</a>
+
+                    <hr>
+
+                    <div class="card-text">Police Registration form!</div>
+                    <a class="linkCard" th:href="@{/police-registration}">>> Visit</a>
+
+                    <hr>
+
+                    <div class="card-text">Suspect Registration form!</div>
+                    <a class="linkCard" th:href="@{/suspect-registration}">>> Visit</a>
+
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+
+                    <!--Links to the search pages-->
+                    <div class="card-title t3">SEARCH</div>
+
+                    <div class="card-text">Police Search Page!</div>
+                    <a class="linkCard" th:href="@{/police-search}">>> Visit</a>
+
+                    <hr>
+
+                    <div class="card-text">Person Search Page!</div>
+                    <a class="linkCard" th:href="@{/person-search}">>> Visit</a>
+
+                    <hr>
+
+                    <div class="card-text">License Search Page!</div>
+                    <a class="linkCard" th:href="@{/license-search}">>> Visit</a>
+
+                    <hr>
+
+                    <div class="card-text">Suspect Search Page!</div>
+                    <a class="linkCard" th:href="@{/suspect-search}">>> Visit</a>
+
+                    <hr>
+
+                    <div class="card-text">Incident Search Page!</div>
+                    <a class="linkCard" th:href="@{/incident-search}">>> Visit</a>
+
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+
+                    <!--Links to the account pages-->
+                    <div class="card-title t3">ACCOUNT</div>
+    
+                    <div class="card-text">My Account!</div>
+                    <a class="linkCard" th:href="@{/view-accounts}">>> Visit</a>
+
+                    <hr>
+
+                    <div class="card-text">My Activity Log!</div>
+                    <a class="linkCard" th:href="@{/}">>> Visit</a>
+                </div>
+
+            </div>
+
+        </div>
+
+        </div>
+
+        <!-- NRAC Modal -->
+        <div class="modal fade" id="nracModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-mb" role="document">
+                
+                <div class="modal-content">
+
+                    <div class="modal-header">
+
+                        <!-- Title -->
+                        <div class="t2">Incident Reports to review</div>
+
+                        <!-- Close Window Button -->
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+
+                    </div>
+
+                    <div class="modal-body">
+
+                        <!--NRAC Search Results-->
+                        <div th:each="incidentReport:${incidentReports}">
+                            
+                            <form th:action="@{/nrac-submit}" method="post">
+
+                                <!-- Incident URN field -->
+                                <div class="form-group row">
+                                    <label for="incidentURN"  class="col-sm-4 col-form-label">Incident URN</label>
+                                    <div  class="col-sm-8">
+                                        <input type="number" class="form-control" id="incidentURN" name="incidentURN" th:value="${incidentReport.getIncidentURN()}" readonly>
+                                    </div>
+                                </div>
+
+                                <!-- Crime type field -->
+                                <div class="form-group row">
+                                    <label for="crimeType"  class="col-sm-4 col-form-label">Crime Type</label>
+                                    <div  class="col-sm-8">
+                                        <input type="text" class="form-control" id="crimeType" th:attr=" placeholder=${incidentReport.getCrimeType()}" readonly>
+                                    </div>
+                                </div>
+
+                                <!-- date and time field -->
+                                <div class="form-group row">
+                                    <label for="dateAndTime"  class="col-sm-4 col-form-label">Date and Time</label>
+                                    <div  class="col-sm-8">
+                                        <input type="datetime-local" class="form-control" id="dateAndTime" th:value="${incidentReport.getDateAndTime().toString()}" readonly>
+                                    </div>
+                                </div>
+
+                                <!-- Description field -->
+                                <div class="form-group row">
+                                    <label for="description"  class="col-sm-4 col-form-label">Description</label>
+                                    <div  class="col-sm-8">
+                                        <input type="text" class="form-control" id="description" th:attr=" placeholder=${incidentReport.getDescription()}" readonly>
+                                    </div>
+                                </div>
+
+                                <!-- Location field -->
+                                <div class="form-group row">
+                                    <label for="location"  class="col-sm-4 col-form-label">Location</label>
+                                    <div  class="col-sm-8">
+                                        <input type="text" class="form-control" id="location" th:value="${incidentReport.getLatitude()}+','+${incidentReport.getLongitude()}" readonly>
+                                    </div>
+                                </div>
+
+                                <!-- Security field -->
+                                <div class="form-group row">
+                                    <label for="securityAccess"  class="col-sm-4 col-form-label">Security Access Level</label>
+                                    <div  class="col-sm-8">
+                                        <input type="text" class="form-control" id="securityAccess" th:attr=" placeholder=${incidentReport.getSecurityAccessLevel()}" readonly>
+                                    </div>
+                                </div>
+
+                                <!-- Hidden field -->
+                                <div class="form-group row">
+                                    <label th:for="'hiddenInput'+${incidentReport.getIncidentURN()}"  class="col-sm-4 col-form-label"></label>
+                                    <div  class="col-sm-8">
+                                        <input type="hidden" class="form-control" th:id="'hiddenInput'+${incidentReport.getIncidentURN()}" name="deletion" value=0>
+                                    </div>
+                                </div>
+
+                                <div class="col">
+                                    <button type="button" class="btn" th:onclick="|keepData(${incidentReport.getIncidentURN()})|">Keep data</button>
+                                    <button type="button" class="btn btn-danger" th:onclick="|deleteData(${incidentReport.getIncidentURN()})|">Delete Data</button>
+                                    <button type="submit" class="btn btn-success">Submit Form</button>
+                                </div>
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <div th:if="${msg}">
+                            <span th:text="${msg}"></span>
+                        </div>
+
+                    </div>
+
+                    <script>
+                        function deleteData(incidentURN){
+                            document.getElementById("hiddenInput"+ incidentURN).value = "1";
+                        }
+    
+                        function keepData(incidentURN){
+                            document.getElementById("hiddenInput"+ incidentURN).value = "0";
+                        }
+                    </script>
+
+                </div>
+
+            </div>
+        </div>
+
+</body>
+</html>
+    

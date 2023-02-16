@@ -1,0 +1,278 @@
+<!--
+Originally Created by: Ben Summers
+Use: Page that allows police to search for incidents along with the incidents evidence.
+-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/menu_fragments :: resources">
+    Load Fragment Head
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Menu Navigation Bar -->
+    <div id="nav-menu" th:replace="~{/fragments/menu_fragments :: nav-menu-admin(${#authentication.getPrincipal().getUsername()}, Incident_Search_Form)}">
+        Menu Navigation Bar
+    </div>
+    <!-- Search fields-->
+    <div class="searchField">
+        <!--Search By badge number-->
+        <form th:action="@{/incidentReportSearchByBadgeNumber}" method="post">
+            <fieldset>
+                <input type="search" name="badgeNumber" id="badgeNumberSearch" size="50" placeholder="Search by badge number..." required>
+                <button type="submit" class="btn"><i class="fa fa-search"></i></button>
+            </fieldset>
+        </form>
+
+        <!--Search By incident URN-->
+        <form th:action="@{/incidentReportSearchByIncidentURN}" method="post">
+            <fieldset>
+                <input type="search" name="incidentURN" id="incidentURNSearch" size="50" placeholder="Search by incident URN..." required>
+                <button type="submit" class="btn"><i class="fa fa-search"></i></button>
+            </fieldset>
+        </form>
+
+        <!--Search By date-->
+        <form th:action="@{/incidentReportSearchByDateAndTime}" method="post">
+            <fieldset>
+                <label for="dateAndTimeFrom">From:</label>
+                <input type="datetime-local" id="dateAndTimeFrom" name="dateAndTimeFrom" required style="max-width: 130px;">
+                <label for="dateAndTimeTo">To:</label>
+                <input type="datetime-local" id="dateAndTimeTo" name="dateAndTimeTo" required style="max-width: 130px;">
+                <button type="submit" class="btn"><i class="fa fa-search"></i></button>
+            </fieldset>
+        </form>
+
+        <script>
+            //Queries Nominatim reverse geocoding API for the latitude and longitude of the boundingbox
+            function findBoundingBox(){
+                var location= document.getElementById("locationSearch").value;
+                var query= location.replace(/ /g, "+");
+                var url= 'https://nominatim.openstreetmap.org/search?q='+query+'&format=json&limit=1';
+                //Extracts the values from the JSON recieved from the API
+                $.getJSON(url, function(data) {
+                    document.getElementById("boundingBoxMinLatitude").value= data[0].boundingbox[0];
+                    document.getElementById("boundingBoxMaxLatitude").value= data[0].boundingbox[1];
+                    document.getElementById("boundingBoxMinLongitude").value= data[0].boundingbox[2];
+                    document.getElementById("boundingBoxMaxLongitude").value= data[0].boundingbox[3];
+                });
+            }
+        </script>
+        <!--Search By location-->
+        <form id="searchByLocationForm" name="searchByLocationForm" th:action="@{/incidentReportSearchByLocation}" method="post">
+
+                <input type="search" name="locationSearch" id="locationSearch" size="31" placeholder="Search by location...">
+
+<!--                Coordinates of the bounding box containing the coordinates for the given area-->
+                <input type="hidden" name="boundingBoxMinLatitude" id="boundingBoxMinLatitude" >
+                <input type="hidden" name="boundingBoxMinLongitude" id="boundingBoxMinLongitude" >
+
+                <input type="hidden" name="boundingBoxMaxLatitude" id="boundingBoxMaxLatitude" >
+                <input type="hidden" name="boundingBoxMaxLongitude" id="boundingBoxMaxLongitude" >
+
+                <button type="button" onclick="findBoundingBox()" class="btn">Confirm</button>
+                <button type="submit" class="btn"><i class="fa fa-search"></i></button>
+        </form>
+
+        <!--Displays a "No results" message if backend doesn't find any results-->
+        <div th:if="${msg}">
+            <span class="t2" th:text="${msg}"></span>
+        </div>
+    </div>
+    <br>
+    <hr>
+    <br>
+
+    <!--SEARCH RESULTS-->
+    <div th:each="report:${reportList}">
+        <form method="post">
+            <!-- Incident URN field -->
+            <div class="form-group row">
+                <label for="incidentURN"  class="col-sm-4 col-form-label">Incident URN</label>
+                <div  class="col-sm-8">
+                    <input type="number" class="form-control" id="incidentURN" th:value="${report.getIncidentURN()}" readonly>
+                </div>
+            </div>
+
+            <!-- badge number field -->
+            <div class="form-group row">
+                <label for="badgeNumber"  class="col-sm-4 col-form-label">Badge Number</label>
+                <div  class="col-sm-8">
+                    <input type="number" class="form-control" id="badgeNumber" th:value="${report.getBadgeNumber()}" readonly>
+                </div>
+            </div>
+
+            <!-- Crime Type -->
+            <div class="form-group row">
+                <label for="crimeType" class="col-sm-4 col-form-label">Crime Type</label>
+                <div class="col-sm-8">
+                    <select id="crimeType">
+                        <option th:value="${report.getCrimeType()}" th:inline="text">[[${report.getCrimeType()}]]</option>
+                        <option th:each="crimeType : ${T(com.team05.codebotiics.mopi_webapp.model.enums.CrimeType).values()}"
+                                th:value="${crimeType}"
+                                th:text="${crimeType.displayValue}">
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- date field field -->
+            <div class="form-group row">
+                <label for="date"  class="col-sm-4 col-form-label">Date</label>
+                <div  class="col-sm-8">
+                    <!--Although these inputs have the same id="date", Thymeleaf only renders ONE depending on whether the dateAndTime received from the backend is null-->
+                    <input type="datetime-local" class="form-control" id="date" th:if="${report.getDateAndTime() != null}" th:value="${report.getDateAndTime().toString()}">
+                    <input type="datetime-local" class="form-control" id="date" th:unless="${report.getDateAndTime() != null}">
+                </div>
+            </div>
+
+            <!-- description field -->
+            <div class="form-group row">
+                <label for="description"  class="col-sm-4 col-form-label">Description</label>
+                <div  class="col-sm-8">
+                    <input type="text" class="form-control" id="description" th:value="${report.getDescription()}">
+                </div>
+            </div>
+
+            <!-- Interactive Map -->
+            <div style="text-align: center;">
+                <div th:id="${report.getIncidentURN()}" style="height: 200px; width: 200px;margin: 0% 0% 20px 35.5%;"></div>
+            </div>
+
+            <!--
+            The address fields have unique IDs generated by thymeleaf to differentiate between the address fields of
+            different results
+            -->
+
+            <!-- Hidden street field from map coordinates -->
+            <div class="form-group row">
+                <label for="street_[[${report.getIncidentURN()}]]"  class="col-sm-4 col-form-label" style="display:none" th:id="'streetLabel_'+${report.getIncidentURN()}">Street</label>
+                <div  class="col-sm-8">
+                    <input type="hidden" class="form-control" th:id="'street_'+${report.getIncidentURN()}">
+                </div>
+            </div>
+            <!-- Hidden suburb field from map coordinates -->
+            <div class="form-group row">
+                <label for="suburb_[[${report.getIncidentURN()}]]"  class="col-sm-4 col-form-label" style="display:none" th:id="'suburbLabel_'+${report.getIncidentURN()}">Suburb</label>
+                <div  class="col-sm-8">
+                    <input type="hidden" class="form-control" th:id="'suburb_'+${report.getIncidentURN()}">
+                </div>
+            </div>
+            <!-- Hidden town field from map coordinates -->
+            <div class="form-group row">
+                <label for="town_[[${report.getIncidentURN()}]]"  class="col-sm-4 col-form-label" style="display:none" th:id="'townLabel_'+${report.getIncidentURN()}">Town</label>
+                <div  class="col-sm-8">
+                    <input type="hidden" class="form-control" th:id="'town_'+${report.getIncidentURN()}">
+                </div>
+            </div>
+            <!-- Hidden county field from map coordinates -->
+            <div class="form-group row">
+                <label for="county_[[${report.getIncidentURN()}]]"  class="col-sm-4 col-form-label" style="display:none" th:id="'countyLabel_'+${report.getIncidentURN()}">County</label>
+                <div  class="col-sm-8">
+                    <input type="hidden" class="form-control" th:id="'county_'+${report.getIncidentURN()}">
+                </div>
+            </div>
+            <!-- Hidden postcode field from map coordinates -->
+            <div class="form-group row">
+                <label for="postcode_[[${report.getIncidentURN()}]]"  class="col-sm-4 col-form-label" style="display:none" th:id="'postcodeLabel_'+${report.getIncidentURN()}">Postcode</label>
+                <div  class="col-sm-8">
+                    <input type="hidden" class="form-control" th:id="'postcode_'+${report.getIncidentURN()}">
+                </div>
+            </div>
+            <!-- Hidden country field from map coordinates -->
+            <div class="form-group row">
+                <label for="country_[[${report.getIncidentURN()}]]"  class="col-sm-4 col-form-label" style="display:none" th:id="'countryLabel_'+${report.getIncidentURN()}">Country</label>
+                <div  class="col-sm-8">
+                    <input type="hidden" class="form-control" th:id="'country_'+${report.getIncidentURN()}">
+                </div>
+            </div>
+
+            <button class="btn" type="button" th:onclick="|requestLocation${report.getIncidentURN()}()|">Request Address</button>
+            <!--Code for the Leaflet maps-->
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+            <script type="application/javascript" src="//unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+            <script>
+                //This function queries the Nominatim reverse geocoding API with the Latitude and Longitude values
+                //from this IncidentReport.
+                function requestLocation[[${report.getIncidentURN()}]](){
+                    var url= "https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=".concat([[${report.getLatitude()}]],"&lon=",[[${report.getLongitude()}]]);
+                    //Extract address values from the JSON returned by the API and update the address fields of the
+                    //current result
+                    $.getJSON(url, function(data) {
+                        var address= data["address"];
+                        document.getElementById("streetLabel_[[${report.getIncidentURN()}]]").style.display= "block";
+                        document.getElementById("street_[[${report.getIncidentURN()}]]").value= address.road;
+                        document.getElementById("street_[[${report.getIncidentURN()}]]").type= 'text';
+                        document.getElementById("suburbLabel_[[${report.getIncidentURN()}]]").style.display= "block";
+                        document.getElementById("suburb_[[${report.getIncidentURN()}]]").value= address.suburb;
+                        document.getElementById("suburb_[[${report.getIncidentURN()}]]").type= 'text';
+                        document.getElementById("townLabel_[[${report.getIncidentURN()}]]").style.display= "block";
+                        document.getElementById("town_[[${report.getIncidentURN()}]]").value= address.town;
+                        document.getElementById("town_[[${report.getIncidentURN()}]]").type= 'text';
+                        document.getElementById("countyLabel_[[${report.getIncidentURN()}]]").style.display= "block";
+                        document.getElementById("county_[[${report.getIncidentURN()}]]").value= address.county;
+                        document.getElementById("county_[[${report.getIncidentURN()}]]").type= 'text';
+                        document.getElementById("postcodeLabel_[[${report.getIncidentURN()}]]").style.display= "block";
+                        document.getElementById("postcode_[[${report.getIncidentURN()}]]").value= address.postcode;
+                        document.getElementById("postcode_[[${report.getIncidentURN()}]]").type= 'text';
+                        document.getElementById("countryLabel_[[${report.getIncidentURN()}]]").style.display= "block";
+                        document.getElementById("country_[[${report.getIncidentURN()}]]").value= address.country;
+                        document.getElementById("country_[[${report.getIncidentURN()}]]").type= 'text';
+                    });
+                }
+            </script>
+            <script>
+                //Creates a new Leaflet Map with the coordinates centered on those in the IncidentReport
+                var map = new L.Map('[[${report.getIncidentURN()}]]', {
+                    center: [ [[${report.getLatitude()}]],[[${report.getLongitude()}]] ],
+                    zoom: 14,
+                    layers: [
+                        new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            'attribution': 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+                        })
+                    ]
+                });
+                //Adds marker with the coordinates specified in the IncidentReport
+                var marker= L.marker([ [[${report.getLatitude()}]],[[${report.getLongitude()}]] ]).addTo(map);
+            </script>
+
+            <!-- Security Access Level -->
+            <div class="form-group row">
+                <label for="securityAccessLevel" class="col-sm-4 col-form-label">securityAccessLevel</label>
+                <div class="col-sm-8">
+                    <select id="securityAccessLevel">
+                        <option th:value="${report.getSecurityAccessLevel()}" th:inline="text">[[${report.getSecurityAccessLevel()}]]</option>
+                        <option th:each="securityAccessLevel : ${T(com.team05.codebotiics.mopi_webapp.model.enums.SecurityAccessLevel).values()}"
+                                th:value="${securityAccessLevel}"
+                                th:text="${securityAccessLevel.displayValue}">
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </form>
+        <div>
+            <!--Allows the user to download evidence of a crime-->
+            <p class="t2"> Download Evidence: </p>
+            <form th:each="evidence:${report.getEvidence()}" th:action="@{/download-file}" method="post">
+                <!--            hidden-->
+                <div class="form-group row">
+                    <label for="downloadEvidenceID" class="col-sm-4 col-form-label"></label>
+                    <div class="col-sm-8">
+                        <input type="hidden" class="form-control" id="downloadEvidenceID" name="downloadEvidenceID" th:value="${evidence.getEvidenceId()}">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success">Download [[${evidence.getName}]]</button>
+            </form>
+        </div>
+        <br>
+        <hr>
+        <br>
+    </div>
+</div>
+</body>
+</html>

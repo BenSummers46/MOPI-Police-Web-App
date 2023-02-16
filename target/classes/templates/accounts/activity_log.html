@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+
+<!--RESOURCES-->
+<head th:replace="fragments/menu_fragments :: resources">
+    Load Fragment Head
+</head>
+
+<body>
+<div class="container">
+
+
+    <!-- Menu Navigation Bar-->
+    <div id="nav-menu" th:replace="~{/fragments/menu_fragments :: nav-menu-admin(${badge_num}, Activity_Log)}">
+        Menu Navigation Bar
+    </div>
+
+    <h2>Activity Log</h2>
+
+    <!--Search By date-->
+    <form th:action="@{/activityLogSearchByDateAndTime}" method="post">
+        <fieldset>
+            <label for="dateAndTimeStarting">Starting </label>
+            <input type="datetime-local" id="dateAndTimeStarting" name="dateAndTimeStarting" required style="max-width: 130px;">
+
+            <label for="dateAndTimeEnding">Ending </label>
+            <input type="datetime-local" id="dateAndTimeEnding" name="dateAndTimeEnding" required style="max-width: 130px;">
+
+            <button type="submit" class="btn"><i class="fa fa-search"></i></button>
+
+            <input type="reset" value="Reset">
+        </fieldset>
+    </form>
+
+</div>
+</body>
+</html>

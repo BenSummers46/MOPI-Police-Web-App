@@ -1,0 +1,375 @@
+window.onload = function() {
+    $(function() {
+
+        var licenseList;
+        var initialLicenseList;
+
+        var personList;
+        var initialPersonList;
+
+        var licenseList2;
+        var initialLicenseList2;
+
+        document.getElementById("submitLinkForm").disabled = true; 
+
+        // -------------------- LICENSE REGISTRATION FORM --------------------
+       
+        $("#confirmLicense").change(function() {
+            confirmLicenseCheck($(this).val());
+        });
+
+        // Validation (NotBlank of LicenseType)
+        function confirmLicenseCheck(check){
+
+            var input = document.getElementById('licenseType').value;
+
+            if ( input == "" && check == "on" ) {
+                swal("Input error!", "No license has been selected!");
+                document.getElementById('confirmLicense').checked = false;
+            }
+
+        }
+        
+        // Fetch licenses list
+        fetchLicenses();
+        
+        function fetchLicenses() {
+            
+            $.ajax({
+                type: "POST",
+                url: "/license/search/getLicenses",
+                contentType: "application/json",
+                data: JSON.stringify('{"":""}'),
+                dataType: 'json',
+                success: function (data) {
+
+                    licenseList = data;
+                    initialLicenseList = data;
+
+                },
+                error: function (e) {
+
+                    swal("Filter error!", e.responseText, e);
+                }
+            });
+        }
+
+        $("#licenseType").change(function() {
+            fetchByLicenseType($(this).val());
+        });
+
+        // Filter by License Type
+        function fetchByLicenseType(type){
+
+            var data = licenseList.result;
+
+            filterList = $.grep(data, function(v) {
+                return v.licenseType == type;
+            })
+
+            if ( filterList.length != 0 ) {
+                swal("Input error!", "License Type already exists. Please try again!");
+                $('#licenseType').val('');
+                $('#confirmLicense').val(null);
+            }
+        }
+
+        // -------------------- LICENSE FILTER FORM 2 --------------------
+
+        // Fetch licenses list
+        fetchLicenses2();
+        
+        function fetchLicenses2() {
+            
+            $.ajax({
+                type: "POST",
+                url: "/license/search/getLicenses",
+                contentType: "application/json",
+                data: JSON.stringify('{"":""}'),
+                dataType: 'json',
+                success: function (data) {
+
+                    licenseList2 = data.result;
+                    initialLicenseList2 = data.result;
+
+                    for (var j = 0; j < licenseList2.length; j++) {
+                        $('#licenseId').append($('<option/>', {
+                            value: licenseList2[j].licenseId,
+                            text: licenseList2[j].licenseId,
+                            id: licenseList2[j].licenseId
+                        }));
+                    }
+                },
+                error: function (e) {
+
+                    swal("Filter error!", e.responseText, e);
+                }
+            });
+        }
+
+        $("#licenseId").change(function() {
+            fetchByLicenseId($(this).val());
+        });
+
+        // Filter by License ID
+        function fetchByLicenseId(ID){ 
+
+            var personField = document.getElementById("personId").value;
+
+            if ( ID != -1 && personField != -1 ) {
+                document.getElementById("submitLinkForm").disabled = false; 
+            } else {
+                document.getElementById("submitLinkForm").disabled = true;
+            }
+
+            // Check to see if default value is selected
+            if ( ID == -1 ) {
+                licenseList2 = initialLicenseList2;
+            } else {
+            
+            var data = licenseList2;
+
+            filterList = $.grep(data, function(v) {
+                return v.licenseId == ID;
+            })
+            licenseList2 = filterList;
+            }
+        }
+        
+        $("#licenseResult").click(function() {
+
+            if ( licenseList2.length != 0 ) {
+            
+            // Constructing the fields of the license table
+            let licenseList_selected = licenseList2.map(function(obj) {
+                return {
+                    licenseId: obj.licenseId,
+                    licenseType: obj.licenseType,
+                }
+            });
+
+            var rows = licenseList_selected;
+            var html = '<table>';
+            html += '<tr>';
+            for( var j in rows[0] ) {
+            html += '<th>' + j + '</th>';
+            }
+            html += '</tr>';
+            for( var i = 0; i < rows.length; i++) {
+            html += '<tr>';
+            for( var j in rows[i] ) {
+            html += '<td>' + rows[i][j] + '</td>';
+            }
+            html += '</tr>';
+            }
+            html += '</table>';
+
+            document.getElementById('license-table').innerHTML = html;
+            
+            licenseList2 = initialLicenseList2;
+        }
+        else {
+            swal("Alert!", "No results found.");
+            licenseList2 = initialLicenseList2;
+        }
+        });
+
+        // -------------------- PERSON FILTER FORM --------------------
+
+        // Fetch persons list
+        fetchPersons();
+        
+        function fetchPersons() {
+            
+            $.ajax({
+                type: "POST",
+                url: "/license/search/getPersons",
+                contentType: "application/json",
+                data: JSON.stringify('{"":""}'),
+                dataType: 'json',
+                success: function (data) {
+
+                    personList = data.result;
+                    initialPersonList = data.result;
+
+                    for (var j = 0; j < personList.length; j++) {
+                        $('#personId').append($('<option/>', {
+                            value: personList[j].personId,
+                            text: personList[j].personId,
+                            id: personList[j].personId
+                        }));
+                    }
+
+                },
+                error: function (e) {
+
+                    swal("Filter error!", e.responseText, e);
+                }
+            });
+        }
+
+        $("#personId").change(function() {
+            fetchByPersonId($(this).val());
+        });
+
+        // Filter by person ID
+        function fetchByPersonId(ID){ 
+
+            var licenseField = document.getElementById('licenseId').value;
+
+            if ( ID != -1 && licenseField != -1 ) {
+                document.getElementById("submitLinkForm").disabled = false; 
+            } else {
+                document.getElementById("submitLinkForm").disabled = true;
+            }
+
+            var data = personList;
+
+            filterList = $.grep(data, function(v) {
+                return v.personId == ID;
+            })
+        }
+
+        $("#personSearchButton").click(function() {
+
+            personList = initialPersonList;
+
+            // Return fields to their default value
+            $('#firstname').val('')
+            $("#lastname").val('')
+            $('#dateOfBirth').val('')
+            $('#sex').val('-1');
+            $('#ethnicOrigin').val('')
+        });
+
+        $("#firstname").change(function() {
+            fetchByFirstname($(this).val());
+        });
+
+        // Filter by Firstname
+        function fetchByFirstname(inputFirstname){ 
+
+            var data = personList;
+
+            filterList = $.grep(data, function(v) {
+                return v.firstname == inputFirstname;
+            })
+            personList = filterList;
+        }
+
+        $("#lastname").change(function() {
+            fetchByLastname($(this).val());
+        });
+
+        // Filter by Lastname
+        function fetchByLastname(inputLastname){ 
+
+            var data = personList;
+
+            filterList = $.grep(data, function(v) {
+                return v.lastname == inputLastname;
+            })
+            personList = filterList;
+        }
+
+        $("#dateOfBirth").change(function() {
+            fetchByDateOfBirth($(this).val());
+        });
+
+        // Filter by Date of Birth
+        function fetchByDateOfBirth(inputDateOfBirth){ 
+
+            var data = personList;
+
+            filterList = $.grep(data, function(v) {
+                return v.dateOfBirth.split("T")[0] == inputDateOfBirth;
+            })
+            personList = filterList;
+        }
+        
+        $("#sex").change(function() {
+            fetchBySex($(this).val());
+        });
+
+        // Filter by Sex
+        function fetchBySex(inputSex){ 
+
+            var data = personList;
+
+            filterList = $.grep(data, function(v) {
+                return v.sex == inputSex;
+            })
+            personList = filterList;
+        }
+
+        $("#ethnicOrigin").change(function() {
+            fetchByEthnicOrigin($(this).val());
+        });
+
+        // Filter by Ethnic Origin
+        function fetchByEthnicOrigin(inputEthnicOrigin){ 
+
+            var data = personList;
+
+            filterList = $.grep(data, function(v) {
+                return v.ethnicOrigin == inputEthnicOrigin;
+            })
+            personList = filterList;
+        }
+
+        $("#submitPersonForm").click(function() {
+
+            if ( personList.length != 0 ) {
+            
+            // Constructing the fields of the person table
+            let personList_selected = personList.map(function(obj) {
+                return {
+                    personId: obj.personId,
+                    firstname: obj.firstname,
+                    middleName: obj.middleName,
+                    lastname: obj.lastname,
+                    alias: obj.alias,
+                    ethnicOrigin: obj.ethnicOrigin,
+                    dateOfBirth: obj.dateOfBirth.split("T")[0],
+                    sex: obj.sex,
+                    weight: obj.weight,
+                    height: obj.height
+                }
+            });
+
+            var rows = personList_selected;
+            var html = '<table>';
+            html += '<tr>';
+            for( var j in rows[0] ) {
+            html += '<th>' + j + '</th>';
+            }
+            html += '</tr>';
+            for( var i = 0; i < rows.length; i++) {
+            html += '<tr>';
+            for( var j in rows[i] ) {
+            html += '<td>' + rows[i][j] + '</td>';
+            }
+            html += '</tr>';
+            }
+            html += '</table>';
+
+            document.getElementById('person-table').innerHTML = html;
+            
+            // Return fields to their default value
+            $('#firstname').val('')
+            $("#lastname").val('')
+            $('#dateOfBirth').val('')
+            $('#sex').val('-1');
+            $('#ethnicOrigin').val('')
+
+            personList = initialPersonList;
+        }
+        else {
+            swal("Alert!", "No results found.");
+            personList = initialPersonList;
+        }
+        });
+
+
+    });
+};

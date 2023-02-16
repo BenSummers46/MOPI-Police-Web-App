@@ -1,0 +1,227 @@
+<!--
+Originally Created by: Ben Summers
+Use: Custom login page for the website
+-->
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Resources -->
+<head>
+
+    <title>MoPI Login</title>
+    
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <!-- stylesheet -->
+    <style>
+
+    /* Page styles */
+    body { background-color: steelblue; }
+
+    .login{ font-family: calibri;
+            background-color: white;
+            width: 400px;
+            height: auto;
+            margin: 7em auto;
+            margin-top: 30px;
+            
+            border: calc(8px + 0.2vw) solid transparent;
+            background-origin: border-box;
+            background-clip: content-box, border-box;
+            background-size: cover;
+            box-sizing: border-box;
+            box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Title styles */
+    .t1 {	color: black;
+            text-align: center;
+            font-family: calibri;
+            font-size: 40px;
+            font-weight: bold;
+            text-transform: uppercase;
+            float: center;
+    }
+
+    .t2 {	color: black;
+            font-family: calibri;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 0px 0px 20px 0px;
+    }
+
+    /* Content styles */
+    label, input {  color: black;
+                    font-family: calibri;
+                    font-size: 15px;
+                    font-style: capitalize;
+    }
+
+    label { width: 40px }
+
+    .btn {  color: white;
+            text-align: centre;
+            font-family: calibri;
+            font-size: 15px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-style: solid;
+            border-width: 0.1cm;
+            border-color: black;
+            background-color:rgb(18, 119, 18);
+            width: 175;
+            cursor: pointer;
+            margin: 5px 5px 5px 10px;
+            border-radius: 0px;
+    }
+
+    .btn-success:hover {    background-color: rgb(29, 161, 29);
+                            border-color: black;
+                            color: white;
+    }
+
+
+    .alert-success {    text-align: center;
+                        background-color: lightgreen;
+                        border-color: black;
+                        color: black;
+                        font-family: calibri;
+                        font-size: 15px;
+                        font-weight: bold;
+                        border-style: solid;
+                        border-width: 0.1cm;
+                        border-color: black;
+    }
+
+    .alert-error {      text-align: center;
+                        background-color: rgb(214, 88, 88);
+                        border-color: black;
+                        color: black;
+                        font-family: calibri;
+                        font-size: 15px;
+                        font-weight: bold;
+                        border-style: solid;
+                        border-width: 0.1cm;
+                        border-color: black;
+    }
+         
+    a { color: black;
+        font-family: calibri;
+        font-size: 15px;
+        font-weight: bold;
+        font-style: capitalize;
+        color: black;
+        float: right;
+        text-align: right;
+        text-decoration: underline;
+    }
+
+    a:hover {   color: white;
+                font-weight: bold;
+    }
+    
+    /* Image stlyes */
+    .logo { border: calc(8px + 0.2vw) solid transparent;
+            background-origin: border-box;
+            background-clip: content-box, border-box;
+            background-size: cover;
+            box-sizing: border-box;
+            box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.5);
+            background-color: white;
+
+            margin-top: 30px;
+            border-left: none;
+            border-right: none;
+    }
+    
+    img {   display: block;
+            margin-left: auto;
+            margin-right: auto;
+
+            width: auto;
+            height: auto;
+            max-width: 100px;
+            max-height: 100px
+    }
+
+    </style>
+</head>
+
+<body>
+
+    <!--Policing logo-->
+    <div class="logo">
+        <img src="https://d17wy4t6ps30xx.cloudfront.net/production/uploads/2020/03/College-of-Policing-Logo.jpg"/>
+    </div>
+
+    <div class="login">
+        
+        <div class="col">
+
+            <!-- Header -->
+            <div class="t1">MoPI Login</div>
+
+            <!--Checks to see if the user has entered the wrong credentials-->
+            <div th:if="${param.error}" class="alert alert-error">
+                Invalid Username and Password!
+            </div>
+
+            <!--Checks to see if the user has logged out.-->
+            <div th:if="${param.logout}" class="alert alert-success">
+                You have successfully logged out!
+            </div>
+
+            <hr>
+
+            <div class="t2">Please enter your credentials below</div>
+
+                <!-- Body -->
+                <form name="login" th:action="@{/login}" method="POST">
+
+                    <!-- badge number field -->
+                    <div class="form-group row">
+                        <label for="badge_num"  class="col sm-4 col-form-label">Badge Number</label>
+                        <div  class="col-auto sm-8">
+                            <input class="form-control" type="number" id="badge_num" name="username" placeholder="Badge Number" required>
+                        </div>
+                    </div>
+
+                    <!-- password field -->
+                    <div class="form-group row">
+                        <label for="password"  class="col sm-4 col-form-label">Password</label>
+                        <div  class="col-auto sm-8">
+                            <input class="form-control" type="password" id="password" name="password" placeholder="Password" autocomplete="off" required>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!--Submit button-->
+                    <div class="row" style="align-content: center">
+                        <button type="submit" class="btn btn-success">Log in</button>
+                    </div>
+
+                    <hr>
+
+                </form>
+
+                <!-- TBD -->
+                <!-- <a th:href="@{/}">Forgot Password?</a> -->
+
+        </div>
+        
+    </div>
+
+</body>
+</html>

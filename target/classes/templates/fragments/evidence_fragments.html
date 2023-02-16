@@ -1,0 +1,67 @@
+<!--
+Originally Created by: Ben Summers
+Use: Fragments for the evidence page
+-->
+
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<body>
+    <!--Submit Evidence-->
+    <div id="submitEvidence" class="container" th:fragment="submit-evidence">
+
+        <div class="t2">Submit evidence details below</div>
+
+        <!-- Incident URN field -->
+        <div class="form-group row">
+            <label for="incidentURN"  class="col-sm-4 col-form-label">Incient URN</label>
+            <div  class="col-sm-8">
+                <input type="number" class="form-control" id="incidentURN" placeholder="-" required>
+                <!--<span th:if="${#fields.hasErrors('person.firstname')}" th:errors="*{person.firstname}" class="text-danger"></span>-->
+            </div>
+        </div>
+
+        <!-- Name field -->
+        <div class="form-group row">
+            <label for="name"  class="col-sm-4 col-form-label">Name</label>
+            <div  class="col-sm-8">
+                <input type="text" class="form-control" id="name" placeholder="-">
+                <!--<span th:if="${#fields.hasErrors('person.firstname')}" th:errors="*{person.firstname}" class="text-danger"></span>-->
+            </div>
+        </div>
+
+        <!-- Security Access field -->
+        <div class="form-group row">
+            <label for="securityAccessLevel"  class="col-sm-4 col-form-label">Security Access Level</label>
+            <div  class="col-sm-8">
+                <select class="form-control" id="securityAccessLevel" required>
+                    <option value="OFFICIAL">OFFICIAL</option>
+                    <option value="OFFICIAL_SENSITIVE">OFFICIAL_SENSITIVE</option>
+                    <option value="SECRET">SECRET</option>
+                    <option value="TOP_SECRET">TOP_SECRET</option>
+                </select>
+                <!--<span th:if="${#fields.hasErrors('person.firstname')}" th:errors="*{person.firstname}" class="text-danger"></span>-->
+            </div>
+        </div>
+
+        <!-- Evidence File field -->
+        <div class="form-group row">
+            <label for="evidenceFile"  class="col-sm-4 col-form-label">Evidence File</label>
+            <div  class="col-sm-8">
+                <input type="file" class="form-control" id="evidenceFile">
+                <!--<span th:if="${#fields.hasErrors('person.firstname')}" th:errors="*{person.firstname}" class="text-danger"></span>-->
+            </div>
+        </div>
+
+        <!-- Description field -->
+        <div class="form-group row">
+            <label for="description"  class="col-sm-4 col-form-label">Description</label>
+            <div  class="col-sm-8">
+                <input type="text" class="form-control" id="description" placeholder="-">
+                <!--<span th:if="${#fields.hasErrors('person.firstname')}" th:errors="*{person.firstname}" class="text-danger"></span>-->
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
