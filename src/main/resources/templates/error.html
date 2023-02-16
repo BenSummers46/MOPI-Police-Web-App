@@ -1,0 +1,48 @@
+<!--
+Originally Created by: Mark Hill
+Use: Error page.
+-->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Error</title>
+    <style>
+        table td{
+            vertical-align:top;
+            border:solid 1px #888;
+            padding:10px;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="t1">We encountered an error</h1>
+
+    <br>
+
+    <!--Table to show the status of the error message-->
+    <table>
+        <tr>
+            <td>Error</td>
+            <td th:text="${error}"/>
+        </tr>
+        <tr>
+            <td>Status</td>
+            <td th:text="${status}"/>
+        </tr>
+        <tr>
+            <td>Message</td>
+            <td th:text="${message}"/>
+        </tr>
+    </table>
+
+    <br>
+
+    <!--Log out button for the user-->
+    <p class="t2">Please logout and retry</p>
+    <form class="right" form-method="post" th:action="@{/logout}">
+        <button type="submit" class="logout_btn">Logout</button>
+    </form>
+</body>
+</html>

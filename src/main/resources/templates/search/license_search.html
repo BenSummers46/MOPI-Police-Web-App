@@ -1,0 +1,92 @@
+<!--
+Originally Created by: Ben Summers
+Use: Page that allows police to search for licenses
+-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!--RESOURCES-->
+<head th:replace="fragments/menu_fragments :: resources">
+    Load Fragment Head
+</head>
+
+<body>
+<div class="container">
+
+    <!-- Menu Navigation Bar-->
+    <div id="nav-menu" th:replace="~{/fragments/menu_fragments :: nav-menu-admin(${#authentication.getPrincipal().getUsername()}, License_Search_Form)}">
+        Menu Navigation Bar
+    </div>
+
+    <div class="searchField">
+        <!--Search By first name-->
+        <form th:action="@{/licenseSearchByLicenseID}" method="post">
+            <fieldset>
+                <input type="search" name="licenseID" size="50" placeholder="Search by licenseID..." required>
+                <button type="submit" class="btn"><i class="fa fa-search"></i></button>
+            </fieldset>
+        </form>
+
+        <!--Displays a "No results" message if backend doesn't find any results-->
+        <div th:if="${msg}">
+            <span class="t2" th:text="${msg}"></span>
+        </div>
+    </div>
+    <br>
+    <hr>
+    <br>
+<!--    Search Results-->
+    <div th:each="license: ${licenseList}">
+        <form id="results" th:action="@{/modifyLicense}" method="post">
+            <!-- licenseID -->
+            <div class="form-group row">
+                <label for="licenseID"  class="col-sm-4 col-form-label">License ID</label>
+                <div  class="col-sm-8">
+                    <input type="text" class="form-control" id="licenseId" name="licenseId" th:value="${license.getLicenseId()}" readonly>
+                </div>
+            </div>
+
+            <fieldset th:id="'result'+${license.getLicenseId()}" disabled="true">
+                <!-- licenseType -->
+                <div class="form-group row">
+                    <label for="licenseType"  class="col-sm-4 col-form-label">License Type</label>
+                    <div  class="col-sm-8">
+                        <input type="text" class="form-control" id="licenseType" name="licenseType" th:value="${license.getLicenseType()}">
+                    </div>
+                </div>
+            </fieldset>
+
+            <!--Specifies whether the user is DELETING or UPDATING a record-->
+            <div class="form-group row">
+                <div class="col-sm-8">
+                    <input type="hidden" class="form-control" th:id="'action'+${license.getLicenseId()}" name="action"  value=0 required>
+                </div>
+            </div>
+            <div class="col">
+                <button type="button" class="btn" th:onclick="|edit${license.getLicenseId()}()|">Edit Data</button>
+                <button type="button" class="btn btn-danger" th:onclick="|delete${license.getLicenseId()}()|">Delete Data</button>
+                <button type="submit" class="btn btn-success" th:id="'submit'+${license.getLicenseId()}" disabled="true">Submit Form</button>
+            </div>
+        </form>
+        <br>
+        <hr>
+        <br>
+        <script>
+            //Enables the disabled fields in the form, sets the hidden action field to 0 for UPDATING
+            function edit[[${license.getLicenseId()}]](){
+                document.getElementById("result"+[[${license.getLicenseId()}]]).removeAttribute("disabled");
+                document.getElementById("submit"+[[${license.getLicenseId()}]]).removeAttribute("disabled");
+                document.getElementById("action"+[[${license.getLicenseId()}]]).value = 0;
+            }
+            //Enables the disabled fields in the form, sets the hidden action field to 1 for DELETION
+            function delete[[${license.getLicenseId()}]](){
+                document.getElementById("result"+[[${license.getLicenseId()}]]).removeAttribute("disabled");
+                document.getElementById("submit"+[[${license.getLicenseId()}]]).removeAttribute("disabled");
+                document.getElementById("action"+[[${license.getLicenseId()}]]).value = 1;
+            }
+        </script>
+    </div>
+</div>
+</body>
+</html>

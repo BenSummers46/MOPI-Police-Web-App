@@ -1,0 +1,284 @@
+<!--
+Originally Created by: Michael Stavrou
+Use: Page that allows new suspects to be uploaded to the database from incidents and people.
+-->
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Resources -->
+<head th:replace = "fragments/menu_fragments :: resources"> 
+    Load fragment head
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Menu Navigation Bar-->
+        <div id="nav-menu" th:replace="~{/fragments/menu_fragments :: nav-menu-admin(${badge_num}, Suspect_Registration_Form)}">
+            Menu Navigation Bar      
+        </div>
+
+        <div class="row">
+
+            <form action="#" th:action="@{/suspect-registration}" th:object="${suspectDTO}" method="POST">
+
+                <div class="col">
+
+                    <div class="t2">Link a suspect below</div>
+
+                    <!-- Incident URN field -->
+                    <div class="form-group row">
+                        <label for="incidentURN" class="col-sm-4 col-form-label">Incident URN</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+
+                                <select id="incidentURN" th:field="*{incidentURN}" class="form-control">
+                                    <option th:value="-1">-- select an option --</option>
+                                </select>
+
+                                <!-- Incident Filter Section (Modal)-->
+                                <div class="navbar-brand">
+                                    <div data-toggle="tooltip" data-placement="right" title="Search/Filter results">
+                                        <a class="fa fa-search fa-sm" data-toggle="modal" data-target="#incidentModal"></a>
+                                    </div>
+                                </div>
+                            
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Person ID field -->
+                    <div class="form-group row">
+                        <label for="personId" class="col-sm-4 col-form-label">Person ID</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+
+                                <select id="personId" th:field="*{personId}" class="form-control">
+                                    <option th:value="-1">-- select an option --</option>
+                                </select>
+
+                                <!-- Person Filter Section (Modal)-->
+                                <div class="navbar-brand">
+                                    <div data-toggle="tooltip" data-placement="right" title="Search/Filter results">
+                                        <a class="fa fa-search fa-sm" data-toggle="modal" data-target="#personModal" id="personSearchButton"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Buttons -->
+                    <div class="col">
+        
+                        <button type="submit" class="btn btn-success" id="submitLinkForm">Submit form</button>
+                        <button type="reset" class="btn btn-danger" id="resetLinkForm">Reset form</button>
+                
+                    </div>
+
+                </div>
+
+                <!-- Incident Modal -->
+
+                <!-- Suspect Registration javascript file -->
+                <script type="text/javascript">
+                    var accessLevels = "[[${accessLevels}]]";
+                </script>
+                <script th:src="@{js/suspects.js}"></script>
+
+                <div class="modal fade" id="incidentModal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-mb" role="document">
+                        
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+
+                                <!-- Title -->
+                                <div class="t2">Filter results for Incident URN below</div>
+
+                                <!-- Close window button-->
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        
+                            <div class="modal-body">
+                        
+                                <!-- Incident Filter Section -->
+                                <div class="card card-body">
+                                                                                
+                                    <!-- crime type field -->
+                                    <div class="form-group row">
+                                        <label for="crimeType" class="col-sm-4 col-form-label">Crime Type</label>
+                                        <div class="col-sm-8">
+                                            <select id="crimeType" name="crimeType">
+                                                <option th:value="-1">-- select an option --</option>
+                                                <option th:each="crimeType : ${T(com.team05.codebotiics.mopi_webapp.model.enums.CrimeType).values()}"
+                                                        th:value="${crimeType}"
+                                                        th:text="${crimeType.displayValue}">
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                        
+                                    <!-- security access level field -->
+                                    <div class="form-group row">
+                                        <label for="securityAccessLevel" class="col-sm-4 col-form-label">System Clearance</label>
+                                        <div class="col-sm-8">
+                                            <select id="securityAccessLevel"></select>
+                                        </div>
+                                    </div>
+                
+                                    <!-- fromDate field -->
+                                    <div class="form-group row">
+                                        <label for="fromDate" class="col-sm-4 col-form-label">From Date</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="fromDate" placeholder="yyyy-mm-dd">
+                                        </div>
+                                    </div>
+                
+                                    <!-- toDate field -->
+                                    <div class="form-group row">
+                                        <label for="toDate" class="col-sm-4 col-form-label">To Date</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="toDate" placeholder="yyyy-mm-dd">
+                                        </div>
+                                    </div>
+                                            
+                                </div>
+                            </div>
+
+                            <!-- Incident Modal Footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="submitIncidentForm">Submit form</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Person Modal -->
+                <div class="modal fade" id="personModal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-mb" role="document">
+                        
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+
+                                <!-- Title -->
+                                <div class="t2">Filter results for Person ID below</div>
+
+                                <!-- Close Window Button -->
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+
+                            </div>
+                                
+                            <div class="modal-body">
+                            
+                                <!-- Incident Filter Section -->
+                                <div class="card card-body">
+                                                                    
+                                        <!-- firstname field -->
+                                        <div class="form-group row">
+                                            <label for="firstname"  class="col-sm-4 col-form-label">First name</label>
+                                            <div  class="col-sm-8">
+                                                <input class="form-control" list="firstname" id="firstname" name="firstname" placeholder="-"/>
+                                                <datalist>
+                                                    <option th:each="person : ${persons}" th:value=" ${person.firstname}">
+                                                    </option>
+                                                </datalist>
+                                            </div>
+                                        </div>
+
+                                        <!-- lastname field -->
+                                        <div class="form-group row">
+                                            <label for="lastname"  class="col-sm-4 col-form-label">Last name</label>
+                                            <div  class="col-sm-8">
+                                                <input class="form-control" list="lastname"  id="lastname" name="lastname" placeholder="-"/>
+                                                <datalist>
+                                                    <option th:each="person : ${persons}" th:value=" ${person.lastname}">
+                                                    </option>
+                                                </datalist>
+                                            </div>
+                                        </div>
+
+                                        <!-- date of birth field -->
+                                        <div class="form-group row">
+                                            <label for="dateOfBirth" class="col-sm-4 col-form-label">Date of Birth</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="dateOfBirth" placeholder="yyyy-mm-dd" >
+                                            </div>
+                                        </div>
+
+                                        <!-- sex -->
+                                        <div class="form-group row">
+                                            <label for="sex" class="col-sm-4 col-form-label">Sex</label>
+                                            <div class="col-sm-8">
+                                                <select id="sex">
+                                                    <option th:value="-1">-- select an option --</option>
+                                                    <option th:each="sex : ${T(com.team05.codebotiics.mopi_webapp.model.enums.Sex).values()}"
+                                                            th:value="${sex}"
+                                                            th:text="${sex.displayValue}">
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <!-- ethnic origin field -->
+                                        <div class="form-group row">
+                                            <label for="ethnicOrigin"  class="col-sm-4 col-form-label">Ethnic Origin</label>
+                                            <div  class="col-sm-8">
+                                                <input class="form-control" list="ethnicOrigin" id="ethnicOrigin" name="ethnicOrigin" placeholder="-"/>
+                                                <datalist>
+                                                    <option th:each="person : ${persons}" th:value=" ${person.ethnicOrigin}">
+                                                    </option>
+                                                </datalist>
+                                            </div>
+                                        </div>
+                                                            
+                                </div>
+
+                            </div>
+                
+                            <!-- Person Modal Footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="submitPersonForm">Submit form</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>                 
+
+            </form>
+
+        </div>
+
+        <div class="t2">Incident Results</div>
+
+        <div class="row">
+            <div class="col">
+                <div style="overflow:auto;">
+                    <!-- Incident Table Section -->
+                    <table id="incident-table" class="table-striped"></table>
+                </div>
+            </div>
+        </div>
+
+        <div class="t2">Person Results</div>
+
+        <div class="row">
+            <div class="col">
+                <div style="overflow:auto;">
+                    <!-- Person Table Section -->
+                    <table id="person-table" class="table-striped"></table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+            
+</body>
+
+</html>

@@ -1,0 +1,103 @@
+<!--
+Originally Created by: Michael Stavrou
+Use: Page that allows police to search for suspects of certain incidents.
+-->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/menu_fragments :: resources">
+    Load fragment head
+    <meta charset="UTF-8">
+</head>
+<body>
+<div class="container tab-pane">
+    <div th:replace="fragments/menu_fragments :: nav-menu-admin(${#authentication.getPrincipal().getUsername()},  Suspect_Search)"/>
+
+    <!--Search Fields-->
+    <div class="searchField">
+        <div>
+            <!--Search By first name-->
+            <form th:action="@{/suspectSearchByFirstName}" method="post">
+                <fieldset>
+                    <input type="search" name="firstName" size="50" placeholder="Search by firstname...">
+                    <button type="submit" class="btn"><i class="fa fa-search"></i></button>
+                </fieldset>
+            </form>
+        </div>
+        <!--Displays a "No results" message if backend doesn't find any results-->
+        <div th:if="${msg}">
+            <span class="t2" th:text="${msg}"></span>
+        </div>
+        <br>
+        <hr>
+        <br>
+    </div>
+    <!--Search Results-->
+
+    <div th:each="suspect: ${suspectList}">
+        <form th:action="@{/modifySuspect}" method="post">
+            <!--Hidden fields used by the modifySuspect method in the backend to identify the Suspect-->
+            <input type="hidden" name="personId" id="personId" th:value="${suspect.getPersonId()}">
+
+            <div class="t2">Person details:</div>
+
+            <!--IncidentReports in which this person is a suspect-->
+            <div class="t2">Incidents:</div>
+            <div th:id="'incidentsOf'+${suspect.getPersonId()}" class="form-group row" style="overflow: auto">
+                <div th:each="incident: ${suspect.getIncidentReports()}">
+                    <label th:for="'individualincidentOf'+${suspect.getPersonId()}+'For'+${incident.getIncidentURN()}" class="col-sm-4 col-form-label"></label>
+                    <div class="col-sm-8">
+                        <!--
+                        Each IncidentReport gets its own Thymeleaf generated ID so that its 'Revoke' button targets the
+                         correct HTML element
+                         -->
+                        <input th:id="'individualincidentOf'+${suspect.getPersonId()}+'For'+${incident.getIncidentURN()}" th:name="'individualincidentOf'+${suspect.getPersonId()}+'For'+${incident.getIncidentURN()}" type="number" th:value="${incident.getIncidentURN()}" th:inline="text">[[${incident.getIncidentURN()}]]</input>
+                        <button type="button" class="btn btn-danger" th:onclick="|revokeincident${incident.getIncidentURN()}Of${suspect.getPersonId()}()| + ';this.disabled= true;'">Revoke incident</button>
+                    </div><br>
+                    <!--
+                        The 'Revoke' button for each incident has a unique Thymeleaf generated ID so its javascript
+                         function must be generated in a similar way
+                         -->
+                    <script>
+                        function revokeincident[[${incident.getIncidentURN()}]]Of[[${suspect.getPersonId()}]](){
+                            document.getElementById("individualincidentOf"+[[${suspect.getPersonId()}]]+"For"+[[${incident.getIncidentURN}]]).disabled= true;
+                        }
+                    </script>
+                </div>
+            </div>
+
+            <!-- first name field -->
+            <div class="form-group row">
+                <label for="firstname"  class="col-sm-4 col-form-label">First name</label>
+                <div  class="col-sm-8">
+                    <input type="text" class="form-control" id="firstname" th:attr="value= ${suspect.getFirstname()}" disabled="true">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="middlename"  class="col-sm-4 col-form-label">Middle name</label>
+                <div  class="col-sm-8">
+                    <input type="text" class="form-control" id="middlename" th:value="${suspect.getMiddleName()}" disabled="true">
+                </div>
+            </div>
+
+            <!-- last name field -->
+            <div class="form-group row">
+                <label for="lastname"  class="col-sm-4 col-form-label">Last name</label>
+                <div  class="col-sm-8">
+                    <input type="text" class="form-control" id="lastname" th:value="${suspect.getLastname()}" disabled="true">
+                </div>
+            </div>
+
+            <!--Form buttons-->
+            <div class="col">
+                <button type="submit" class="btn btn-success">Submit Form</button>
+            </div>
+        </form>
+        <br>
+        <hr>
+        <br>
+    </div>
+</div>
+</body>
+</html>

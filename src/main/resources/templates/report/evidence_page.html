@@ -1,0 +1,86 @@
+<!--
+Originally Created by: Ben Summers
+Use: Page that allows evidence to be uploaded for a specific incident.
+-->
+
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head th:replace="fragments/menu_fragments :: resources">
+    Load fragment head
+    <meta charset="UTF-8">
+    <title>Evidence Page</title>
+    <style>
+        div{
+            font-family: Calibri, serif;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!--Navigation Bar-->
+    <div id="nav-menu" th:replace="~{/fragments/menu_fragments :: nav-menu-admin(${#authentication.getPrincipal().getUsername()}, Evidence_Form)}">
+        Menu Navigation Bar
+    </div>
+
+    <form th:action="@{/evidence-upload}" method="POST" enctype="multipart/form-data">
+
+        <div class="t2">Submit evidence details below</div>
+
+        <!-- Incident URN field -->
+        <div class="form-group row">
+            <label for="incidentURN"  class="col-sm-4 col-form-label">Incident URN</label>
+            <div  class="col-sm-8">
+                <input type="number" class="form-control" id="incidentURN" name= "incidentURN" th:value="${incidentURN}" placeholder="-" required>
+            </div>
+        </div>
+
+        <!-- Name field -->
+        <div class="form-group row">
+            <label for="name"  class="col-sm-4 col-form-label">Name</label>
+            <div  class="col-sm-8">
+                <input type="text" class="form-control" id="name" name="name" th:value="${name}" placeholder="-" required>
+            </div>
+        </div>
+
+        <!-- Security Access field -->
+        <div class="form-group row">
+            <label for="securityAccessLevel"  class="col-sm-4 col-form-label">Security Access Level</label>
+            <div  class="col-sm-8">
+                <select class="form-control" id="securityAccessLevel" name="securityAccessLevel" th:value="${securityAccessLevel}" required>
+                    <option value="OFFICIAL">OFFICIAL</option>
+                    <option value="OFFICIAL_SENSITIVE">OFFICIAL_SENSITIVE</option>
+                    <option value="SECRET">SECRET</option>
+                    <option value="TOP_SECRET">TOP_SECRET</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Evidence File field -->
+        <div class="form-group row">
+            <label for="evidenceFile"  class="col-sm-4 col-form-label">Evidence File</label>
+            <div  class="col-sm-8">
+                <input type="file" class="form-control" id="evidenceFile" name="file" th:value="${file}" required>
+            </div>
+        </div>
+
+        <!-- Description field -->
+        <div class="form-group row">
+            <label for="description"  class="col-sm-4 col-form-label">Description</label>
+            <div  class="col-sm-8">
+                <input type="text" class="form-control" id="description" name="description" th:value="${description}" placeholder="-">
+            </div>
+        </div>
+
+        <!--Submits the contents of the form-->
+        <div id="formButtons" th:replace="~{/fragments/buttons_fragments :: formButtons}">
+            Form Buttons
+        </div>
+    </form>
+    <div th:if="${msg}">
+        <span th:text="${msg}"></span>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!--
+Originally Created by: Ben Summers
+Use: Page that allows new people as well as new police accounts to be uploaded to the database
+-->
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Resources -->
+<head th:replace = "fragments/menu_fragments :: resources">
+    Load fragment head
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Menu Navigation Bar-->
+        <div id="nav-menu" th:replace="~{/fragments/menu_fragments :: nav-menu-admin(${badge_num}, Police_Registration_Form)}">
+            Menu Navigation Bar      
+        </div>
+        
+        <div class="row">
+
+        <!-- Police Navigation Bar -->
+        <div class="col-auto">
+
+            <ul class="nav nav-pills flex-column" role="tablist">
+                
+                <!-- Person Details Navigation -->
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="pill" href="#personDetails" role="tab" aria-controls="personDetails" 
+                    aria-selected="true" id="personDetailsTab">Person Details</a>
+                </li>
+    
+                <!-- Contact Details Navigation -->
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="pill" href="#personContactDetails" role="tab" aria-controls="personContactDetails"
+                     aria-selected="false" id="personContactDetailsTab">Contact Details</a>
+                </li>
+    
+                <!-- Police Details Navigation -->
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="pill" href="#policeDetails" role="tab" aria-controls="policeDetails" 
+                    aria-selected="false" id="policeDetailsTab">Police Details</a>
+                </li>
+
+            </ul>
+    
+        </div>
+
+        <form action="#" th:action="@{/police-registration}" th:object="${police}" method="POST">
+
+                <div class="tab-content" id="v-pills-tabContent">
+                
+                    <!-- PERSON FORM -->
+                    <div class="container-fluid tab-pane fade show active" id="personDetails" role="tabpanel" aria-labelledby="personDetailsTab">
+                        <div id="person-content" th:replace="~{/fragments/police_fragments :: person-content}">
+                            Person Content Details
+                        </div>
+                    </div>
+
+                    <!-- CONTACT FORM -->
+                    <div class="container-fluid tab-pane fade show" id="personContactDetails" role="tabpanel" aria-labelledby="personContactDetailsTab">
+                        <div id="personContact-content" th:replace="~{/fragments/police_fragments :: personContact-content}">
+                            Contact Content Details
+                        </div>
+                    </div>
+
+                    <!-- POLICE FORM  -->
+                    <div class="container-fluid tab-pane fade auto" id="policeDetails" role="tabpanel" aria-labelledby="policeDetailsTab">
+                        <div id="police-content" th:replace="~{/fragments/police_fragments :: police-content}">
+                            Police Content Details
+                        </div> 
+                    </div>
+
+                    <!-- Form Buttons -->
+                    <div id="formButtons" th:replace="~{/fragments/buttons_fragments :: formButtons}">
+                        Form Buttons
+                    </div>
+
+                </div>
+
+        </form>
+
+    </div>
+
+    </div>    
+
+</body>
+</html>

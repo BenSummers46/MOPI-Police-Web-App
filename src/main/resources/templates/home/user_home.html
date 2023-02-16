@@ -1,0 +1,152 @@
+<!--
+Originally Created by: Ben Summers
+Use: Home page for the user role
+-->
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Resources -->
+<head th:replace = "fragments/menu_fragments :: resources"> 
+    Load fragment head
+</head>
+
+<body> 
+
+    <div class="container">
+
+        <!-- Menu Navigation Bar-->
+        <div id="nav-menu" th:replace="~{/fragments/menu_fragments :: nav-menu-admin(${badge_num}, User_Home_Page)}">
+            Menu Navigation Bar      
+        </div>
+
+        <!-- Carousel Bar -->
+        <div id="carouselIndicators" class="carousel slide" data-ride="carousel" data-interval="6000">
+
+            <!-- Carousel Indicators -->
+            <ol class="carousel-indicators">
+                <li data-target="#carouselIndicators" data-slide-to="0" class="active"></li>
+            </ol>
+            
+            <div class="carousel-inner">
+
+                <div class="carousel-item active">
+
+                    <!-- Welcome Page -->
+                    <div class="t3">Welcome to the Police National Database Homepage for Users</div>
+                    <p>This is your central system to control, access and manage data.</p>
+
+                    <div class="col">
+                        <div class="row">
+                            <p>Be aware that the account security clearance is limited to - </p> 
+                            <p style="font-weight:bold" th:text="${securityAccessLevel}"></p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        
+        <!-- App Sections -->
+        <div class="card-deck">
+
+            <div class="card">
+                <div class="card-body">
+
+                    <!--Links to the incident sections-->
+                    <div class="card-title t3">REPORT</div>
+
+                    <div class="card-text">Incident Report form!</div>
+                    <a class="linkCard" th:href="@{/incident-report}">>> Visit</a>
+
+                    <hr>
+
+                    <div class="card-text">Evidence form!</div>
+                    <a class="linkCard" th:href="@{/evidence-upload}">>> Visit</a>
+
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-body">
+
+                    <!--Links to the register section-->
+                    <div class="card-title t3">REGISTER</div>
+
+                    <div class="card-text">Person Registration form!</div>
+                    <a class="linkCard" th:href="@{/person-registration}">>> Visit</a>
+
+                    <hr>
+
+                    <div class="card-text">License Registration form!</div>
+                    <a class="linkCard" th:href="@{/license-registration}">>> Visit</a>
+
+                    <hr>
+
+                    <div class="card-text">Police Registration form!</div>
+                    <a class="linkCard" th:href="@{/police-registration}">>> Visit</a>
+
+                    <hr>
+
+                    <div class="card-text">Suspect Registration form!</div>
+                    <a class="linkCard" th:href="@{/suspect-registration}">>> Visit</a>
+
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+
+                    <!--Links to the search sections-->
+                    <div class="card-title t3">SEARCH</div>
+
+                    <div class="card-text">Police Search Page!</div>
+                    <a class="linkCard" th:href="@{/police-search}">>> Visit</a>
+
+                    <hr>
+
+                    <div class="card-text">Person Search Page!</div>
+                    <a class="linkCard" th:href="@{/person-search}">>> Visit</a>
+
+                    <hr>
+
+                    <div class="card-text">License Search Page!</div>
+                    <a class="linkCard" th:href="@{/license-search}">>> Visit</a>
+
+                    <hr>
+
+                    <div class="card-text">Suspect Search Page!</div>
+                    <a class="linkCard" th:href="@{/suspect-search}">>> Visit</a>
+
+                    <hr>
+
+                    <div class="card-text">Incident Search Page!</div>
+                    <a class="linkCard" th:href="@{/incident-search}">>> Visit</a>
+
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+
+                    <!--Links to the account sections-->
+                    <div class="card-title t3">ACCOUNT</div>
+    
+                    <div class="card-text">My Account!</div>
+                    <a class="linkCard" th:href="@{/view-accounts}">>> Visit</a>
+
+                    <hr>
+
+                    <div class="card-text">My Activity Log!</div>
+                    <a class="linkCard" th:href="@{/}">>> Visit</a>
+                </div>
+
+            </div>
+
+        </div>
+
+        </div>
+
+</body>
+</html>
+    

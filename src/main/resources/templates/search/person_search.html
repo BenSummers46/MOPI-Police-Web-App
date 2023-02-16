@@ -1,0 +1,262 @@
+<!--
+Originally Created by: Ben Summers
+Use: Page that allows police to search for particular people in the database
+-->
+
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+
+<!--RESOURCES-->
+<head th:replace="fragments/menu_fragments :: resources">
+    Load Fragment Head
+    <title></title>
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- Menu Navigation Bar -->
+        <div id="nav-menu" th:replace="~{/fragments/menu_fragments :: nav-menu-admin(${#authentication.getPrincipal().getUsername()}, Person_Search_Form)}">
+            Menu Navigation Bar
+        </div>
+        <div class="searchField">
+            <!--Search By first name-->
+            <form th:action="@{/personSearchByFirstName}" method="post">
+                <fieldset>
+                    <input type="search" name="firstName" size="50" placeholder="Search by firstname...">
+                    <button type="submit" class="btn"><i class="fa fa-search"></i></button>
+                </fieldset>
+            </form>
+
+            <!--Search By Last name-->
+            <form th:action="@{/personSearchByLastName}" method="post">
+                <fieldset>
+                    <input type="search" name="lastName" size="50" placeholder="Search by last name...">
+                    <button type="submit" class="btn"><i class="fa fa-search"></i></button>
+                </fieldset>
+            </form>
+        </div>
+        <!--Displays a "No results" message if backend doesn't find any results-->
+        <div th:if="${msg}">
+            <span class="t2" th:text="${msg}"></span>
+        </div>
+        <br>
+        <hr>
+        <br>
+
+        <!--Returns search results-->
+        <div th:each="person: ${personList}">
+            <form th:action="@{/modifyPerson}" method="post">
+                <fieldset th:id="'result'+${person.getPersonId()}" disabled="true">
+                <input type="hidden" id="personId" name="personId" th:value="${person.getPersonId()}">
+
+                <!-- first name field -->
+                <div class="form-group row">
+                    <label for="firstname"  class="col-sm-4 col-form-label">First name</label>
+                    <div  class="col-sm-8">
+                        <input type="text" class="form-control" id="firstname" name="firstname" th:value=" ${person.getFirstname()}">
+                    </div>
+                </div>
+
+                <!-- middle name field -->
+                <div class="form-group row">
+                    <label for="middlename"  class="col-sm-4 col-form-label">Middle name</label>
+                    <div  class="col-sm-8">
+                        <input type="text" class="form-control" id="middlename" name="middlename" th:value=" ${person.getMiddleName()}">
+                    </div>
+                </div>
+
+                <!-- last name field -->
+                <div class="form-group row">
+                    <label for="lastname"  class="col-sm-4 col-form-label">Last name</label>
+                    <div  class="col-sm-8">
+                        <input type="text" class="form-control" id="lastname" name="lastname" th:value="${person.getLastname()}">
+                    </div>
+                </div>
+
+                <!-- alias name field -->
+                <div class="form-group row">
+                    <label for="alias"  class="col-sm-4 col-form-label">Alias</label>
+                    <div  class="col-sm-8">
+                        <input type="text" class="form-control" id="alias" name="alias" th:value="${person.getAlias()}">
+                    </div>
+                </div>
+
+                <!-- ethnic origin field -->
+                <div class="form-group row">
+                    <label for="ethnicOrigin"  class="col-sm-4 col-form-label">Ethnic Origin</label>
+                    <div  class="col-sm-8">
+                        <input type="text" class="form-control" id="ethnicOrigin" name="ethnicOrigin" th:value="${person.getEthnicOrigin()}">
+                    </div>
+                </div>
+
+                <!-- date of birth field -->
+                <div class="form-group row">
+                    <label for="dateOfBirth" class="col-sm-4 col-form-label">Date of Birth</label>
+                    <div class="col-sm-8">
+                        <input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth" th:value=" ${person.getDateOfBirth().toString().substring(0,10)}">
+                    </div>
+                </div>
+
+                <!-- sex -->
+                <div class="form-group row">
+                    <label for="sex" class="col-sm-4 col-form-label">Sex</label>
+                    <div class="col-sm-8">
+                        <select id="sex" name="sex">
+                            <option selected="selected" th:value="${person.getSex()}" th:inline="text">[[${person.getSex()}]]</option>
+                            <option th:each="sex : ${T(com.team05.codebotiics.mopi_webapp.model.enums.Sex).values()}"
+                                    th:value="${sex}"
+                                    th:text="${sex.displayValue}" selected="no">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <!--            Weight-->
+                <div class="form-group row">
+                    <label for="weight" class="col-sm-4 col-form-label">Weight</label>
+                    <div class="col-sm-8">
+                        <input type="number" class="form-control" id="weight" name="weight" th:value="${person.getWeight()}" >
+                    </div>
+                </div>
+
+                <!--            height-->
+                <div class="form-group row">
+                    <label for="height" class="col-sm-4 col-form-label">Height</label>
+                    <div class="col-sm-8">
+                        <input type="number" class="form-control" id="height" name="height" th:value="${person.getHeight()}" >
+                    </div>
+                </div>
+
+                <!-- Licenses-->
+                <div th:id="'licensesOf'+${person.getPersonId()}" class="form-group row" style="overflow: auto">
+                    <!--For each license instance owned by a person-->
+                    <div th:each="license: ${person.getLicense()}">
+                    <label th:for="'individualLicenseOf'+${person.getPersonId()}+'For'+${license.getLicenseId()}" class="col-sm-4 col-form-label"></label>
+                    <div class="col-sm-8">
+                        <!--
+                        Each License gets its own Thymeleaf generated ID so that its 'Revoke' button targets the
+                         correct HTML element
+                         -->
+                        <!--An instance of License owned by the person. It has a dropdown box if the user wishes to
+                        Change what kind of License the person owns-->
+                        <select th:id="'individualLicenseOf'+${person.getPersonId()}+'For'+${license.getLicenseId()}" th:name="'individualLicenseOf'+${person.getPersonId()}+'For'+${license.getLicenseId()}">
+                            <option selected="selected" th:value="${license.getLicenseType()}" th:inline="text">[[${license.getLicenseType()}]]</option>
+                            <option th:each="licenseKind : ${licenseList}"
+                                    th:value="${licenseKind.getLicenseType()}"
+                                    th:text="${licenseKind.getLicenseType()}">
+                            </option>
+                        </select>
+                        <button type="button" class="btn btn-danger" th:onclick="|revokeLicense${license.getLicenseId()}Of${person.getPersonId()}()| + ';this.disabled= true;'" >Revoke License</button>
+                    </div><br>
+                        <!--
+                        The 'Revoke' button for each license has a unique Thymeleaf generated ID so its javascript
+                         function must be generated in a similar way
+                         -->
+                        <script>
+                            function revokeLicense[[${license.getLicenseId()}]]Of[[${person.getPersonId()}]](){
+                                document.getElementById("individualLicenseOf"+[[${person.getPersonId()}]]+"For"+[[${license.getLicenseId}]]).disabled= true;
+                            }
+                        </script>
+                    </div>
+                </div>
+
+                <div class="t2">Contact Details:</div>
+
+                <!-- address line one field -->
+                <div class="form-group row">
+                    <label for="addressLine1"  class="col-sm-4 col-form-label">Address Line One</label>
+                    <div  class="col-sm-8">
+                        <input type="text" class="form-control" id="addressLine1" name="addressLine1" th:value="${personAddresses.get(person.getPersonId)[0]}">
+                    </div>
+                </div>
+
+                <!-- address line two field -->
+                <div class="form-group row">
+                    <label for="addressLine2"  class="col-sm-4 col-form-label">Address Line Two</label>
+                    <div  class="col-sm-8">
+                        <input type="text" class="form-control" id="addressLine2" name="addressLine2" th:value="${personAddresses.get(person.getPersonId)[1]}">
+                    </div>
+                </div>
+
+                <!-- city field -->
+                <div class="form-group row">
+                    <label for="city"  class="col-sm-4 col-form-label">City</label>
+                    <div  class="col-sm-8">
+                        <input type="text" class="form-control" id="city" name="city" th:value="${personAddresses.get(person.getPersonId)[3]}">
+                    </div>
+                </div>
+
+                <!-- county field -->
+                <div class="form-group row">
+                    <label for="country"  class="col-sm-4 col-form-label">County</label>
+                    <div  class="col-sm-8">
+                        <input type="text" class="form-control" id="county" name="county" th:value="${personAddresses.get(person.getPersonId)[5]}">
+                    </div>
+                </div>
+
+                <!-- country field -->
+                <div class="form-group row">
+                    <label for="country"  class="col-sm-4 col-form-label">Country</label>
+                    <div  class="col-sm-8">
+                        <input type="text" class="form-control" id="country" name="country" th:value="${personAddresses.get(person.getPersonId)[2]}">
+                    </div>
+                </div>
+
+                <!-- postcode field -->
+                <div class="form-group row">
+                    <label for="postcode"  class="col-sm-4 col-form-label">Postcode</label>
+                    <div  class="col-sm-8">
+                        <input type="text" class="form-control" id="postcode" name="postcode" th:value="${personAddresses.get(person.getPersonId)[6]}">
+                    </div>
+                </div>
+
+                </fieldset>
+
+                <!--Specifies whether the user is DELETING or UPDATING a record-->
+                <div class="form-group row">
+                    <div class="col-sm-8">
+                        <input type="hidden" class="form-control" th:id="'action'+${person.getPersonId()}" name="action"  value=0 required>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <button type="button" class="btn" th:onclick="|edit${person.getPersonId()}()|">Edit Data</button>
+
+                    <!--Logic to prevent a user from DELETING a Person who is also a Police-->
+                    <div th:if="not ${policeList.get(person.getPersonId())}">
+                        <button type="button" class="btn btn-danger" th:onclick="|delete${person.getPersonId()}()|">Delete Data</button>
+                    </div>
+                    <div th:if="${policeList.get(person.getPersonId())}">
+                        <button type="button" class="btn btn-danger" th:onclick="|deleteWarning${person.getPersonId()}()|">Delete Data</button>
+                        <span class="text-danger" th:id="'delete'+${person.getPersonId()}" style="display:none">CANNOT DELETE: PERSON IS POLICE OFFICER. PLEASE NAVIGATE TO POLICE SEARCH TO DELETE</span>
+                    </div>
+                    <button type="submit" class="btn btn-success" th:id="'submit'+${person.getPersonId()}" disabled="true">Submit Form</button>
+                </div>
+            </form>
+            <br>
+            <hr>
+            <br>
+            <script>
+                //Displays a warning explaining that the user cannot delete this Person because the Person is also a Police officer
+                function deleteWarning[[${person.getPersonId()}]](){
+                    document.getElementById("delete"+[[${person.getPersonId()}]]).style.display= "block";
+                }
+                //Enables the disabled fields in the form, sets the hidden action field to 0 for UPDATING
+                function edit[[${person.getPersonId()}]](){
+                    document.getElementById("result"+[[${person.getPersonId()}]]).removeAttribute("disabled");
+                    document.getElementById("submit"+[[${person.getPersonId()}]]).removeAttribute("disabled");
+                    document.getElementById("action"+[[${person.getPersonId()}]]).value = 0;
+                }
+                //Enables the disabled fields in the form, sets the hidden action field to 1 for DELETION
+                function delete[[${person.getPersonId()}]](){
+                    document.getElementById("result"+[[${person.getPersonId()}]]).removeAttribute("disabled");
+                    document.getElementById("submit"+[[${person.getPersonId()}]]).removeAttribute("disabled");
+                    document.getElementById("action"+[[${person.getPersonId()}]]).value = 1;
+                }
+            </script>
+        </div>
+    </div>
+</body>
+</html>

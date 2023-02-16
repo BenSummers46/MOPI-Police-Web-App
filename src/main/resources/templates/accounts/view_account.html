@@ -1,0 +1,95 @@
+<!--
+Originally Created by: Louis Ward
+Modified/finished by: Ben Summers
+Use: Displays information for the user that is logged in.
+-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+
+<!--RESOURCES-->
+<head th:replace="fragments/menu_fragments :: resources">
+    Load Fragment Head
+</head>
+<style>
+    .h3{
+        color: black;
+        font-family: Calibri, serif;
+        font-weight: unset;
+        font-size: 20px;
+        margin: 0px 0px 20px 0px;
+        display: inline;
+    }
+    .h2{
+        color: black;
+        font-family: calibri;
+        font-size: 20px;
+        font-weight: bold;
+        margin: 0px 0px 20px 0px;
+        display: inline;
+    }
+</style>
+
+<body>
+<div class="container">
+
+    <!-- Menu Navigation Bar-->
+    <div id="nav-menu" th:replace="~{/fragments/menu_fragments :: nav-menu-admin(${police.getBadgeNumber()}, View_Account)}">
+        Menu Navigation Bar
+    </div>
+
+
+    <div class="row">
+
+        <!-- Navigation Bar -->
+        <div class="col-auto">
+
+            <ul class="nav nav-pills flex-column" role="tablist">
+
+                <!-- Person Navigation -->
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="pill" href="#personDetails" role="tab" aria-controls="personDetails"
+                       aria-selected="true" id="personDetailsTab">Personal Details</a>
+                </li>
+
+                <!-- Police Page Navigation -->
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="pill" href="#policeDetails" role="tab" aria-controls="policeDetails"
+                       aria-selected="false" id="policeDetailsTab">Police Details</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="tab-content" id="v-pills-tabContent">
+
+            <!--Person details-->
+            <div class="container-fluid tab-pane fade show active" id="personDetails" role="tabpanel" aria-labelledby="personDetailsTab">
+                <div id="person-content">
+                    <p class="h2">ID: </p><p class="h3" th:text="${police.getPerson.getPersonId()}"></p><br>
+                    <hr>
+                    <p class="h2">Firstname: </p><p class="h3" th:text="${police.getPerson().getFirstname()}"></p><br>
+                    <hr>
+                    <p class="h2">Lastname: </p><p class="h3" th:text="${police.getPerson().getLastname()}"></p><br>
+                    <hr>
+                    <p class="h2">Date of Birth: </p><p class="h3" th:text="${police.getPerson().getDateOfBirth()}"></p><br>
+                </div>
+            </div>
+
+            <!--Police Details-->
+            <div class="container-fluid tab-pane fade show" id="policeDetails" role="tabpanel" aria-labelledby="policeDetailsTab">
+                <div id="police-content">
+                    <p class="h2">Badge Number: </p><p class="h3" th:text="${police.getBadgeNumber()}"></p><br>
+                    <hr>
+                    <p class="h2">Rank: </p><p class="h3" th:text="${police.getRank_l()}"></p><br>
+                    <hr>
+                    <p class="h2">Role: </p><p class="h3" th:text="${police.getRole()}"></p><br>
+                    <hr>
+                    <p class="h2">Access Level: </p><p class="h3" th:text="${police.getSecurityAccessLevel()}"></p><br>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>
